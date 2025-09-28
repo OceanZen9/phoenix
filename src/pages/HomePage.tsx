@@ -9,7 +9,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-import { Search, ShoppingCart, User, Feather } from "lucide-react";
+import { Search, ShoppingCart, Star, User, Feather } from "lucide-react";
 
 function HomePage() {
   return (
@@ -20,6 +20,10 @@ function HomePage() {
           <Button variant="ghost" size="sm" className="p-1 h-7 w-7">
             <ShoppingCart className="h-3 w-3" />
             <span className="sr-only">购物车</span>
+          </Button>
+          <Button variant="ghost" size="sm" className="px-2 h-7 text-xs">
+            <Star className="h-3 w-3" />
+            <span className="sr-only">收藏夹</span>
           </Button>
           <Button variant="ghost" size="sm" className="px-2 h-7 text-xs">
             登录/注册
