@@ -5,6 +5,12 @@ import Navbar from "@/components/feature/ common/Navbar";
  * - 商品展示
  */
 function MerchantPage() {
-  return <Navbar />;
+  return (
+    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-14 items-center">
+        <Navbar />
+      </div>
+    </header>
+  );
 }
 export default MerchantPage;
