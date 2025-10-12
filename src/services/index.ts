@@ -6,11 +6,14 @@
 
 import * as auth from "./auth";
 import * as user from "./user";
+import * as product from "./product";
+import * as admin from "./admin";
 // 未来可以继续添加，例如: import * as products from './products';
 
 // 将所有导入的服务模块整合到一个名为 'api' 的对象中
 export const api = {
   ...auth,
   ...user,
-  // ...products,
+  ...product,
+  ...admin,
 };
