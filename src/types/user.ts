@@ -7,11 +7,14 @@
  * @description 用户的个人资料信息
  */
 export interface UserProfile {
-  user_id: string;
+  userId: string;
+  role: string;
   username: string;
+  avatar: string | null;
   email: string;
-  created_at: string;
-  updated_at: string;
+  address: string | null;
+  createdAt: string;
+  updatedAt: string;
 }
 
 /**
@@ -20,12 +23,13 @@ export interface UserProfile {
 export interface UpdateProfilePayload {
   username?: string;
   email?: string;
+  avatar?: string;
 }
 
 /**
  * @description 修改用户密码时提交的数据体 (Payload)
  */
 export interface ChangePasswordPayload {
-  current_password: string;
-  new_password: string;
+  oldPassword: string;
+  newPassword:string;
 }
