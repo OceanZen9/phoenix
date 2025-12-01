@@ -30,6 +30,10 @@ const apiClient = axios.create({
 // --- 配置请求拦截器 ---
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
+    // 如果是刷新 token 的请求，则不添加 Authorization 头
+    if (config.url?.endsWith('/auth/refreshToken')) {
+      return config;
+    }
     const accessToken = localStorage.getItem("access_token");
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
