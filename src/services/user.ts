@@ -7,14 +7,12 @@ import type {
 import apiClient, { type ApiError } from "./apiClient";
 
 /**
- * @service GET /users/profile
+ * @service GET /api/v1/users/profile
  * @description 获取当前登录用户的个人资料。
  */
 export const getUserProfile = async (): Promise<UserProfile> => {
   try {
-    // apiClient.get 返回的是完整的 AxiosResponse<UserProfile>
-    const response = await apiClient.get<UserProfile>("/users/profile");
-    // 在这里提取 .data，类型完全匹配，没有错误。
+    const response = await apiClient.get<UserProfile>("/api/v1/users/profile");
     return response.data;
   } catch (err) {
     throw err as ApiError;
@@ -22,15 +20,15 @@ export const getUserProfile = async (): Promise<UserProfile> => {
 };
 
 /**
- * @service PUT /users/profile
+ * @service PATCH /api/v1/users/profile
  * @description 更新当前登录用户的个人资料。
  */
 export const updateUserProfile = async (
   payload: UpdateProfilePayload
 ): Promise<UserProfile> => {
   try {
-    const response = await apiClient.put<UserProfile>(
-      "/users/profile",
+    const response = await apiClient.patch<UserProfile>(
+      "/api/v1/users/profile",
       payload
     );
     return response.data;
@@ -40,15 +38,15 @@ export const updateUserProfile = async (
 };
 
 /**
- * @service POST /users/change-password
+ * @service PATCH /api/v1/users/change-password
  * @description 修改当前登录用户的密码。
  */
 export const changePassword = async (
   payload: ChangePasswordPayload
-): Promise<{ message: string }> => {
+): Promise<UserProfile> => {
   try {
-    const response = await apiClient.post<{ message: string }>(
-      "/users/change-password",
+    const response = await apiClient.patch<UserProfile>(
+      "/api/v1/users/change-password",
       payload
     );
     return response.data;
