@@ -1,6 +1,12 @@
-// src/services/auth.test.ts
+/// <reference types="vitest/globals" />
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { login, register, refreshToken, logout } from './auth';
+import type {
+  PasswordLoginPayload,
+  RegisterPayload,
+  RefreshTokenPayload,
+  LogoutPayload,
+} from '@/types/auth';
 import apiClient from './apiClient'; // Import the actual apiClient to mock it
 
 // Mock the apiClient module
@@ -39,7 +45,7 @@ describe('auth service', () => {
       };
       mockApiClientPost.mockResolvedValueOnce({ data: mockLoginResponse });
 
-      const payload = {
+      const payload: PasswordLoginPayload = {
         loginType: 'password',
         email: 'test@example.com',
         password: 'password123',
@@ -54,7 +60,7 @@ describe('auth service', () => {
       const mockError = { message: 'Invalid credentials', status: 401 };
       mockApiClientPost.mockRejectedValueOnce(mockError); // apiClient's interceptor will convert to ApiError
 
-      const payload = {
+      const payload: PasswordLoginPayload = {
         loginType: 'password',
         email: 'wrong@example.com',
         password: 'wrongpassword',
@@ -77,7 +83,7 @@ describe('auth service', () => {
       };
       mockApiClientPost.mockResolvedValueOnce({ data: mockRegisterResponse });
 
-      const payload = {
+      const payload: RegisterPayload = {
         username: 'newuser',
         email: 'new@example.com',
         password: 'newpassword123',
@@ -93,7 +99,7 @@ describe('auth service', () => {
       const mockError = { message: 'Email already in use', status: 409 };
       mockApiClientPost.mockRejectedValueOnce(mockError);
 
-      const payload = {
+      const payload: RegisterPayload = {
         username: 'existinguser',
         email: 'test@example.com',
         password: 'password123',
@@ -113,7 +119,7 @@ describe('auth service', () => {
       };
       mockApiClientPost.mockResolvedValueOnce({ data: mockRefreshTokenResponse });
 
-      const payload = { refreshToken: 'oldRefreshToken' };
+      const payload: RefreshTokenPayload = { refreshToken: 'oldRefreshToken' };
       const result = await refreshToken(payload);
 
       expect(mockApiClientPost).toHaveBeenCalledWith('/api/v1/auth/refreshToken', payload);
@@ -124,7 +130,7 @@ describe('auth service', () => {
       const mockError = { message: 'Invalid refresh token', status: 401 };
       mockApiClientPost.mockRejectedValueOnce(mockError);
 
-      const payload = { refreshToken: 'invalidRefreshToken' };
+      const payload: RefreshTokenPayload = { refreshToken: 'invalidRefreshToken' };
 
       await expect(refreshToken(payload)).rejects.toEqual(mockError);
     });
@@ -135,7 +141,7 @@ describe('auth service', () => {
     it('should successfully log out a user', async () => {
       mockApiClientPost.mockResolvedValueOnce({ data: {} }); // Logout usually returns empty data or a success message
 
-      const payload = { refreshToken: 'userRefreshToken' };
+      const payload: LogoutPayload = { refreshToken: 'userRefreshToken' };
       await logout(payload);
 
       expect(mockApiClientPost).toHaveBeenCalledWith('/api/v1/auth/logout', payload);
@@ -145,7 +151,7 @@ describe('auth service', () => {
       const mockError = { message: 'Logout failed', status: 500 };
       mockApiClientPost.mockRejectedValueOnce(mockError);
 
-      const payload = { refreshToken: 'userRefreshToken' };
+      const payload: LogoutPayload = { refreshToken: 'userRefreshToken' };
 
       await expect(logout(payload)).rejects.toEqual(mockError);
     });
