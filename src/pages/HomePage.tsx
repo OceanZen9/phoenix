@@ -9,12 +9,18 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
-import { useIsAuthenticated } from "@/stores/authStore";
-
-import { Search, ShoppingCart, Star, User, Feather } from "lucide-react";
+import {
+  HoverCard,
+  HoverCardContent,
+  HoverCardTrigger,
+} from "@/components/ui/hover-card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useAuth, useIsAuthenticated } from "@/stores/authStore";
+import { Search, ShoppingCart, Star, Feather } from "lucide-react";
 
 function HomePage() {
   const isAuthenticated = useIsAuthenticated();
+  const { user, logout } = useAuth();
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -29,10 +35,39 @@ function HomePage() {
             <Star className="h-3 w-3" />
             <span className="sr-only">收藏夹</span>
           </Button>
-          {isAuthenticated ? (
-            <Button asChild variant="ghost" size="sm" className="px-2 h-7 text-xs">
-              <Link to="/user">个人中心</Link>
-            </Button>
+          {isAuthenticated && user ? (
+            <HoverCard>
+              <HoverCardTrigger asChild>
+                <Link to="/user">
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src={user.avatar || ''} alt={user.username} />
+                    <AvatarFallback>{user.username.charAt(0)}</AvatarFallback>
+                  </Avatar>
+                </Link>
+              </HoverCardTrigger>
+              <HoverCardContent className="w-56" align="end">
+                 <div className="flex flex-col space-y-1 mb-2">
+                    <p className="text-sm font-medium leading-none">{user.username}</p>
+                    <p className="text-xs leading-none text-muted-foreground">
+                      {user.email}
+                    </p>
+                  </div>
+                <div className="border-b -mx-2 my-2" />
+                <Link to="/user" className="block w-full text-left px-2 py-1.5 text-sm rounded-sm hover:bg-accent">
+                  个人空间
+                </Link>
+                <Link to="/setting" className="block w-full text-left px-2 py-1.5 text-sm rounded-sm hover:bg-accent">
+                  设置
+                </Link>
+                <div className="border-b -mx-2 my-2" />
+                <button
+                  onClick={() => logout()}
+                  className="block w-full text-left px-2 py-1.5 text-sm rounded-sm hover:bg-accent"
+                >
+                  退出登录
+                </button>
+              </HoverCardContent>
+            </HoverCard>
           ) : (
             <Button asChild variant="ghost" size="sm" className="px-2 h-7 text-xs">
               <Link to="/auth">登录/注册</Link>

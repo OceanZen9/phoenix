@@ -4,11 +4,10 @@ import type {
   AuthSuccessResponse,
   RegisterPayload,
 } from "@/types/auth";
-import type { UserProfile } from "@/types/user";
+import type { UserProfile, UpdateProfilePayload } from "@/types/user";
 
 // Mock database
-const users: UserProfile[] = [];
-const mockUser: UserProfile = {
+let mockUser: UserProfile = {
   userId: "1",
   role: "customer",
   username: "Mock User",
@@ -18,13 +17,12 @@ const mockUser: UserProfile = {
   createdAt: new Date().toISOString(),
   updatedAt: new Date().toISOString(),
 };
-users.push(mockUser);
+const users: UserProfile[] = [mockUser];
 
 export const handlers = [
   // Login handler
   http.post("*/api/v1/auth/login", async ({ request }) => {
     const { email, password } = (await request.json()) as LoginPayload;
-
     await delay(1000);
 
     if (email === "test@test.com" && password === "password") {
@@ -47,7 +45,6 @@ export const handlers = [
   // Register handler
   http.post("*/api/v1/auth/register", async ({ request }) => {
     const { username, email } = (await request.json()) as RegisterPayload;
-
     await delay(1000);
 
     const newUser: UserProfile = {
@@ -63,5 +60,37 @@ export const handlers = [
     users.push(newUser);
 
     return HttpResponse.json(newUser, { status: 201 });
+  }),
+
+  // Get User Profile handler
+  http.get("*/api/v1/users/profile", async ({ request }) => {
+    const authHeader = request.headers.get("Authorization");
+    await delay(500);
+
+    if (!authHeader) {
+      return new HttpResponse(JSON.stringify({ message: 'Not authenticated' }), { status: 401 });
+    }
+    
+    return HttpResponse.json(mockUser);
+  }),
+
+  // Update User Profile handler
+  http.patch("*/api/v1/users/profile", async ({ request }) => {
+    const authHeader = request.headers.get("Authorization");
+    if (!authHeader) {
+      return new HttpResponse(JSON.stringify({ message: 'Not authenticated' }), { status: 401 });
+    }
+
+    const payload = (await request.json()) as UpdateProfilePayload;
+    await delay(1000);
+    
+    // Update the mock user data
+    mockUser = {
+      ...mockUser,
+      ...payload,
+      updatedAt: new Date().toISOString(),
+    };
+
+    return HttpResponse.json(mockUser);
   }),
 ];

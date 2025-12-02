@@ -1,0 +1,1175 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "默认模块",
+    "description": "",
+    "version": "1.0.0"
+  },
+  "tags": [],
+  "paths": {
+    "/api/v1/users/profile": {
+      "get": {
+        "summary": "getUserProfile",
+        "deprecated": false,
+        "description": "- 返回用户信息",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "用于用户身份认证的令牌。格式为 `Bearer <token>`，其中 `<token>` 是从登录或注册接口返回的 `accessToken`。所有受保护的接口都必须携带此请求头。",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfile"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      },
+      "patch": {
+        "summary": "updateUserProfile",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "用于用户身份认证的令牌。格式为 `Bearer <token>`，其中 `<token>` 是从登录或注册接口返回的 `accessToken`。所有受保护的接口都必须携带此请求头。",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "username": {
+                    "type": "string",
+                    "title": "用户名",
+                    "description": "若没有，则返回null"
+                  },
+                  "email": {
+                    "type": "string",
+                    "title": "邮箱",
+                    "description": "若没有，则返回null"
+                  },
+                  "avatar": {
+                    "type": "string",
+                    "title": "头像",
+                    "description": "若没有，则返回null"
+                  }
+                }
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfile"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/users/change-password": {
+      "patch": {
+        "summary": "changePassword",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "用于用户身份认证的令牌。格式为 `Bearer <token>`，其中 `<token>` 是从登录或注册接口返回的 `accessToken`。所有受保护的接口都必须携带此请求头。",
+            "required": true,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordPayload"
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfile"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "summary": "register",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterPayload"
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserProfile"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "summary": "login",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/PasswordLoginPayload"
+                  },
+                  {
+                    "$ref": "#/components/schemas/EmailCodeLoginPayload"
+                  }
+                ]
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthSuccessResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/auth/refreshToken": {
+      "post": {
+        "summary": "refreshToken",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenPayload"
+              },
+              "example": {
+                "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaF90b2tlbiIsInN1YiI6ImsxemdncTM4IiwiaWF0IjoxNzY0NTc1Nzc3LCJleHAiOjE3NjcxNjc3Nzd9.k8UIx8WSsu1OXtBrHH6D_fiibQYBZUqo6WUX3-1awcY"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/auth/logout": {
+      "post": {
+        "summary": "logout",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogoutPayload"
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/products": {
+      "get": {
+        "summary": "getProductsList",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  },
+                  "minItems": 0,
+                  "uniqueItems": true
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "summary": "createProduct",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProductPayload"
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/products/{product_id}": {
+      "get": {
+        "summary": "getProductById",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      },
+      "patch": {
+        "summary": "updateProduct",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProductPayload"
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Product"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UserProfile": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "title": "用户ID"
+          },
+          "role": {
+            "type": "string",
+            "title": "用户权限",
+            "description": "用户user，管理员admin"
+          },
+          "username": {
+            "type": "string",
+            "title": "用户名"
+          },
+          "avatar": {
+            "type": "string",
+            "title": "头像",
+            "description": "若无头像，后端返回null"
+          },
+          "email": {
+            "type": "string",
+            "title": "邮箱"
+          },
+          "address": {
+            "type": "string",
+            "title": "地址",
+            "description": "若无地址，后端返回null"
+          },
+          "createdAt": {
+            "type": "string",
+            "title": "创建时间",
+            "description": "24小时，年月日--时分秒"
+          },
+          "updatedAt": {
+            "type": "string",
+            "title": "更新时间",
+            "description": "24小时，年月日--时分秒"
+          }
+        },
+        "required": [
+          "userId",
+          "username",
+          "email",
+          "createdAt",
+          "updatedAt",
+          "role"
+        ]
+      },
+      "UpdateProfilePayload": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "用户名",
+            "description": "若无，则提交null"
+          },
+          "email": {
+            "type": "string",
+            "title": "邮箱",
+            "description": "若无，则提交null"
+          },
+          "avatar": {
+            "type": "string",
+            "title": "头像",
+            "description": "若无，则提交null"
+          }
+        }
+      },
+      "ChangePasswordPayload": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "title": "旧密码"
+          },
+          "newPassword": {
+            "type": "string",
+            "title": "新密码"
+          }
+        },
+        "required": [
+          "oldPassword",
+          "newPassword"
+        ]
+      },
+      "PasswordLoginPayload": {
+        "type": "object",
+        "properties": {
+          "loginType": {
+            "type": "string",
+            "title": "登录方式"
+          },
+          "email": {
+            "type": "string",
+            "title": "邮箱"
+          },
+          "password": {
+            "type": "string",
+            "title": "密码"
+          }
+        },
+        "required": [
+          "email",
+          "password",
+          "loginType"
+        ]
+      },
+      "EmailCodeLoginPayload": {
+        "type": "object",
+        "properties": {
+          "loginType": {
+            "type": "string",
+            "title": "登录方式"
+          },
+          "email": {
+            "type": "string",
+            "title": "邮箱"
+          },
+          "code": {
+            "type": "string",
+            "title": "验证码"
+          }
+        },
+        "required": [
+          "email",
+          "code",
+          "loginType"
+        ]
+      },
+      "AuthSuccessResponse": {
+        "type": "object",
+        "properties": {
+          "user": {
+            "$ref": "#/components/schemas/UserProfile"
+          },
+          "tokens": {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": "string"
+              },
+              "refreshToken": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "accessToken",
+              "refreshToken"
+            ]
+          }
+        },
+        "required": [
+          "user",
+          "tokens"
+        ]
+      },
+      "RegisterPayload": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "用户名"
+          },
+          "email": {
+            "type": "string",
+            "title": "邮箱"
+          },
+          "password": {
+            "type": "string",
+            "title": "密码"
+          },
+          "code": {
+            "type": "string",
+            "title": "验证码"
+          }
+        },
+        "required": [
+          "username",
+          "email",
+          "password",
+          "code"
+        ]
+      },
+      "RefreshTokenPayload": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "RefreshTokenResponse": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          },
+          "accessToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "refreshToken",
+          "accessToken"
+        ]
+      },
+      "LogoutPayload": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "refreshToken"
+        ]
+      },
+      "Product": {
+        "type": "object",
+        "properties": {
+          "productId": {
+            "type": "string",
+            "title": "商品ID"
+          },
+          "name": {
+            "type": "string",
+            "title": "商品名"
+          },
+          "price": {
+            "type": "number",
+            "title": "商品价格"
+          },
+          "description": {
+            "type": "string",
+            "title": "商品描述"
+          },
+          "stock": {
+            "type": "number",
+            "title": "库存"
+          },
+          "category": {
+            "type": "string",
+            "title": "商品类别"
+          },
+          "imageUrl": {
+            "type": "string",
+            "title": "商品图片"
+          },
+          "createdAt": {
+            "type": "string",
+            "title": "创建时间"
+          },
+          "updatedAt": {
+            "type": "string",
+            "title": "更新时间"
+          }
+        },
+        "required": [
+          "productId",
+          "name",
+          "price",
+          "description",
+          "imageUrl",
+          "stock",
+          "createdAt",
+          "updatedAt",
+          "category"
+        ]
+      },
+      "CreateProductPayload": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "商品名称"
+          },
+          "price": {
+            "type": "number",
+            "title": "商品价格",
+            "description": "若无，则返回null"
+          },
+          "description": {
+            "type": "string",
+            "title": "商品描述",
+            "description": "若无，则返回null"
+          },
+          "stock": {
+            "type": "number",
+            "title": "库存",
+            "description": "若无，则返回null"
+          },
+          "imageUrl": {
+            "type": "string",
+            "title": "商品图片",
+            "description": "若无，则返回null"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "UpdateProductPayload": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "商品名称",
+            "description": "若无，则提交null"
+          },
+          "description": {
+            "type": "string",
+            "title": "商品描述",
+            "description": "若无，则提交null"
+          },
+          "category": {
+            "type": "string",
+            "title": "商品类别",
+            "description": "若无，则提交null"
+          },
+          "price": {
+            "type": "number",
+            "title": "商品价格",
+            "description": "若无，则提交null"
+          },
+          "stock": {
+            "type": "number",
+            "title": "库存",
+            "description": "若无，则提交null"
+          },
+          "imageUrl": {
+            "type": "string",
+            "title": "图片",
+            "description": "若无，则提交null"
+          }
+        }
+      },
+      "ApiArror": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "错误消息"
+          },
+          "code": {
+            "type": "string",
+            "title": "机器码"
+          },
+          "status": {
+            "type": "string",
+            "title": "错误码"
+          }
+        },
+        "required": [
+          "message",
+          "code",
+          "status"
+        ]
+      }
+    },
+    "responses": {
+      "未认证": {
+        "description": "",
+        "content": {
+          "application/json": {
+            "schema": {
+              "title": "",
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "title": "错误信息"
+                },
+                "status": {
+                  "type": "string",
+                  "title": "错误码"
+                },
+                "code": {
+                  "type": "string",
+                  "title": "机器码"
+                }
+              },
+              "required": [
+                "message",
+                "status",
+                "code"
+              ]
+            }
+          }
+        }
+      },
+      "未找到": {
+        "description": "",
+        "content": {
+          "application/json": {
+            "schema": {
+              "title": "",
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "title": "错误信息"
+                },
+                "status": {
+                  "type": "string",
+                  "title": "错误码"
+                },
+                "code": {
+                  "type": "string",
+                  "title": "机器码"
+                }
+              },
+              "required": [
+                "status",
+                "code",
+                "message"
+              ]
+            }
+          }
+        }
+      },
+      "权限不足": {
+        "description": "",
+        "content": {
+          "application/json": {
+            "schema": {
+              "title": "",
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "title": "错误信息"
+                },
+                "code": {
+                  "type": "string",
+                  "title": "机器码"
+                },
+                "status": {
+                  "type": "string",
+                  "title": "错误码"
+                }
+              },
+              "required": [
+                "message",
+                "code",
+                "status"
+              ]
+            }
+          }
+        }
+      },
+      "服务器内部错误": {
+        "description": "",
+        "content": {
+          "application/json": {
+            "schema": {
+              "title": "",
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string",
+                  "title": "错误信息"
+                },
+                "code": {
+                  "type": "string",
+                  "title": "机器码"
+                },
+                "status": {
+                  "type": "string",
+                  "title": "错误码"
+                }
+              },
+              "required": [
+                "message",
+                "code",
+                "status"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "phenix_token": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "servers": [],
+  "security": []
+}
