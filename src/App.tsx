@@ -4,6 +4,7 @@ import ShoppingCartPage from "@/pages/ShoppingCartPage";
 import MerchantPage from "@/pages/MerchantPage";
 import AuthPage from "@/pages/AuthPage";
 import UserPage from "@/pages/UserPage";
+import SettingsPage from "@/pages/SettingsPage";
 import { ProtectedRoute } from "@/components/feature/common/ProtectedRoute";
 import { PublicRoute } from "@/components/feature/common/PublicRoute";
 
@@ -35,6 +36,14 @@ function App() {
         element={
           <ProtectedRoute>
             <UserPage />
+          </ProtectedRoute>
+        }
+      />
+       <Route
+        path="/setting"
+        element={
+          <ProtectedRoute>
+            <SettingsPage />
           </ProtectedRoute>
         }
       />
