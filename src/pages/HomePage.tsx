@@ -8,10 +8,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Link } from "react-router-dom";
+import { useIsAuthenticated } from "@/stores/authStore";
 
 import { Search, ShoppingCart, Star, User, Feather } from "lucide-react";
 
 function HomePage() {
+  const isAuthenticated = useIsAuthenticated();
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* 第一行：购物车 收藏夹 我的订单 登陆/注册 */}
@@ -25,9 +29,15 @@ function HomePage() {
             <Star className="h-3 w-3" />
             <span className="sr-only">收藏夹</span>
           </Button>
-          <Button variant="ghost" size="sm" className="px-2 h-7 text-xs">
-            登录/注册
-          </Button>
+          {isAuthenticated ? (
+            <Button asChild variant="ghost" size="sm" className="px-2 h-7 text-xs">
+              <Link to="/user">个人中心</Link>
+            </Button>
+          ) : (
+            <Button asChild variant="ghost" size="sm" className="px-2 h-7 text-xs">
+              <Link to="/auth">登录/注册</Link>
+            </Button>
+          )}
         </div>
       </header>
       {/* 第二行：凤凰商标 搜索框*/}
