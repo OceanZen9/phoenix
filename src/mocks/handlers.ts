@@ -1,8 +1,8 @@
 import { http, HttpResponse, delay } from "msw";
 import type {
-  LoginPayload,
   AuthSuccessResponse,
   RegisterPayload,
+  PasswordLoginPayload,
 } from "@/types/auth";
 import type { UserProfile, UpdateProfilePayload } from "@/types/user";
 
@@ -22,7 +22,7 @@ const users: UserProfile[] = [mockUser];
 export const handlers = [
   // Login handler
   http.post("*/api/v1/auth/login", async ({ request }) => {
-    const { email, password } = (await request.json()) as LoginPayload;
+    const { email, password } = (await request.json()) as PasswordLoginPayload;
     await delay(1000);
 
     if (email === "test@test.com" && password === "password") {
