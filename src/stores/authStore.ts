@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 import type { UserProfile } from "@/types/user";
 import { login as loginService, register as registerService } from "@/services/auth";
-import type { LoginPayload, RegisterPayload, AuthSuccessResponse } from "@/types/auth";
+import type { LoginPayload, RegisterPayload } from "@/types/auth";
 
 interface AuthState {
   user: UserProfile | null;

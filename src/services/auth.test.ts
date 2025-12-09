@@ -1,5 +1,5 @@
 /// <reference types="vitest/globals" />
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, vi, beforeEach, type Mock } from 'vitest';
 import { login, register, refreshToken, logout } from './auth';
 import type {
   PasswordLoginPayload,
@@ -17,7 +17,7 @@ vi.mock('./apiClient', () => ({
 }));
 
 // Cast the mocked apiClient.post to a Mock type for easier testing
-const mockApiClientPost = apiClient.post as vi.Mock;
+const mockApiClientPost = apiClient.post as Mock;
 
 describe('auth service', () => {
   beforeEach(() => {
