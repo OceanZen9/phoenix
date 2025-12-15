@@ -47,6 +47,7 @@ export default function AuthPage() {
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("Attempting to register...");
     try {
       await register({
         username: registerUsername,
@@ -54,8 +55,10 @@ export default function AuthPage() {
         password: registerPassword,
         code: registerCode, // This should be from user input
       });
+      console.log("Registration API call successful");
       // On successful registration, switch to login tab and pre-fill email
       setLoginEmail(registerEmail);
+      console.log("Setting active tab to login");
       setActiveTab("login");
       console.log("Registration successful, please login.");
       // In a real app, you would show a toast notification here.
