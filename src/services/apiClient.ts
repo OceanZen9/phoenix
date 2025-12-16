@@ -19,8 +19,10 @@ export interface ApiError {
 
 // --- 创建 Axios 实例 ---
 // 使用 axios.create() 创建一个可以被全局复用的实例
+
+const baseURL = import.meta.env.VITE_API_BASE_URL || "";
 const apiClient = axios.create({
-  baseURL: "https://api.phoenixmall.com/v1",
+  baseURL: baseURL,
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
