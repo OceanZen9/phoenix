@@ -18,11 +18,19 @@ function App() {
       />
       <Route
         path="/cart"
-        element={<ShoppingCartPage />}
+        element={
+          <ProtectedRoute>
+            <ShoppingCartPage />
+          </ProtectedRoute>
+        }
       />
       <Route
         path="/favorites"
-        element={<FavoritesPage />}
+        element={
+          <ProtectedRoute>
+            <FavoritesPage />
+          </ProtectedRoute>
+        }
       />
       <Route
         path="/merchant"
