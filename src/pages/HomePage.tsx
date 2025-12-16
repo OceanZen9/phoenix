@@ -40,14 +40,14 @@ function HomePage() {
               <HoverCardTrigger asChild>
                 <Link to="/user">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.avatar || ''} alt={user.username} />
-                    <AvatarFallback>{user.username.charAt(0)}</AvatarFallback>
+                    <AvatarImage src={user.avatar || ''} alt={user.username || 'User'} />
+                    <AvatarFallback>{(user.username || user.email || 'U').charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </Link>
               </HoverCardTrigger>
               <HoverCardContent className="w-56" align="end">
                  <div className="flex flex-col space-y-1 mb-2">
-                    <p className="text-sm font-medium leading-none">{user.username}</p>
+                    <p className="text-sm font-medium leading-none">{user.username || '用户'}</p>
                     <p className="text-xs leading-none text-muted-foreground">
                       {user.email}
                     </p>

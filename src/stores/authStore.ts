@@ -34,8 +34,8 @@ const useAuthStore = create<AuthState & AuthActions>()(
         const response = await loginService(payload);
         set({
           user: response.user,
-          accessToken: response.tokens.accessToken,
-          refreshToken: response.tokens.refreshToken,
+          accessToken: response.accessToken,
+          refreshToken: response.refreshToken,
         });
         // Side-effect: You might want to set axios headers here
       },

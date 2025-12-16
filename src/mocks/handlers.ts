@@ -28,10 +28,8 @@ export const handlers = [
     if (email === "test@test.com" && password === "password") {
       const response: AuthSuccessResponse = {
         user: mockUser,
-        tokens: {
-          accessToken: "mock-access-token",
-          refreshToken: "mock-refresh-token",
-        },
+        accessToken: "mock-access-token",
+        refreshToken: "mock-refresh-token",
       };
       return HttpResponse.json(response);
     } else {

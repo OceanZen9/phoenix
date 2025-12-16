@@ -87,7 +87,7 @@ const UserPage: React.FC = () => {
     <div className="space-y-4">
       <div className="grid gap-2">
         <label>用户名</label>
-        <p className="font-semibold">{userProfile?.username}</p>
+        <p className="font-semibold">{userProfile?.username || '未设置'}</p>
       </div>
       <div className="grid gap-2">
         <label>邮箱</label>
@@ -103,7 +103,7 @@ const UserPage: React.FC = () => {
       </div>
       <div className="grid gap-2">
         <label>加入时间</label>
-        <p className="font-semibold">{new Date(userProfile!.createdAt).toLocaleString()}</p>
+        <p className="font-semibold">{userProfile?.createdAt ? new Date(userProfile.createdAt).toLocaleString() : '未知'}</p>
       </div>
       <Button onClick={() => setIsEditMode(true)} className="w-full">
         修改信息
@@ -160,14 +160,14 @@ const UserPage: React.FC = () => {
             <Avatar className="h-20 w-20">
               <AvatarImage
                 src={userProfile?.avatar || undefined}
-                alt={userProfile?.username}
+                alt={userProfile?.username || '用户'}
               />
               <AvatarFallback>
-                {userProfile?.username.charAt(0)}
+                {(userProfile?.username || userProfile?.email || 'U').charAt(0).toUpperCase()}
               </AvatarFallback>
             </Avatar>
             <div className="grid gap-1">
-              <CardTitle className="text-2xl">{userProfile?.username}</CardTitle>
+              <CardTitle className="text-2xl">{userProfile?.username || '用户'}</CardTitle>
               <CardDescription>用户ID: {userProfile?.userId}</CardDescription>
             </div>
           </div>

@@ -21,10 +21,8 @@ export type LoginPayload = PasswordLoginPayload | EmailCodeLoginPayload;
 
 export interface AuthSuccessResponse {
   user: UserProfile;
-  tokens: {
-    accessToken: string;
-    refreshToken: string;
-  };
+  accessToken: string;
+  refreshToken: string;
 }
 
 // --- 注册 (Register) ---

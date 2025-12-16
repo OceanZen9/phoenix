@@ -7,14 +7,15 @@
  * @description 用户的个人资料信息
  */
 export interface UserProfile {
-  userId: string;
+  id?: number;
+  userId?: string;
   role: string;
-  username: string;
-  avatar: string | null;
+  username?: string;
+  avatar?: string | null;
   email: string;
-  address: string | null;
-  createdAt: string;
-  updatedAt: string;
+  address?: string | null;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 /**
