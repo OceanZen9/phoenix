@@ -5,9 +5,10 @@ import { cn } from "@/lib/utils";
 interface LoginMascotProps {
   focusedField: string | null;
   className?: string;
+  size?: number;
 }
 
-export function LoginMascot({ focusedField, className }: LoginMascotProps) {
+export function LoginMascot({ focusedField, className, size = 120 }: LoginMascotProps) {
   const faceRef = useRef<SVGSVGElement>(null);
   const leftPupilRef = useRef<SVGCircleElement>(null);
   const rightPupilRef = useRef<SVGCircleElement>(null);
@@ -58,8 +59,8 @@ export function LoginMascot({ focusedField, className }: LoginMascotProps) {
     <div className={cn("flex justify-center mb-4", className)}>
       <svg
         ref={faceRef}
-        width="120"
-        height="120"
+        width={size}
+        height={size}
         viewBox="0 0 120 120"
         className="overflow-visible"
         aria-hidden="true"
