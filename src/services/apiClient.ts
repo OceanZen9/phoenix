@@ -58,7 +58,12 @@ apiClient.interceptors.response.use(
     };
 
     if (error.response) {
-      const responseData = error.response.data as any;
+      // 定义一个更具体的错误响应数据类型
+      interface ErrorResponseData {
+        message?: string;
+        error_description?: string;
+      }
+      const responseData = error.response.data as ErrorResponseData;
       standardError.message =
         responseData.message ||
         responseData.error_description ||

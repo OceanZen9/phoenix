@@ -29,3 +29,11 @@ export interface ChangePasswordPayload {
   current_password: string;
   new_password: string;
 }
+
+/**
+ * @description 管理员仪表盘数据接口 (待完善)
+ */
+export interface AdminDashboardData {
+  // TODO: Add actual properties for dashboard data once known
+  [key: string]: unknown; 
+}
