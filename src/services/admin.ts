@@ -1,5 +1,5 @@
 import type { Product, ProductDetail } from "@/types/product";
-import type { UserProfile } from "@/types/admin";
+import type { UserProfile, AdminDashboardData } from "@/types/admin";
 import apiClient, { type ApiError } from "./apiClient";
 
 /**
@@ -71,9 +71,9 @@ export const adminGetUsers = async (): Promise<UserProfile[]> => {
  * @service GET /admin/dashboard
  * @description 获取仪表盘数据（管理员）。
  */
-export const adminGetDashboard = async (): Promise<any> => {
+export const adminGetDashboard = async (): Promise<AdminDashboardData> => {
 	try {
-		const response = await apiClient.get<any>("/admin/dashboard");
+		const response = await apiClient.get<AdminDashboardData>("/admin/dashboard");
 		return response.data;
 	} catch (err) {
 		throw err as ApiError;
