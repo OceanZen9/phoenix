@@ -29,3 +29,4 @@ export const buttonVariants = cva(
     },
   }
 )
+export * from "./button.tsx"
