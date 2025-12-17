@@ -35,5 +35,5 @@ export interface ChangePasswordPayload {
  */
 export interface AdminDashboardData {
   // TODO: Add actual properties for dashboard data once known
-  [key: string]: any; 
+  [key: string]: unknown; 
 }
