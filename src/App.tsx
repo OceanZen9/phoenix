@@ -1,6 +1,7 @@
 import { Route, Routes } from "react-router-dom";
 import HomePage from "@/pages/HomePage";
 import ShoppingCartPage from "@/pages/ShoppingCartPage";
+import FavoritesPage from "@/pages/FavoritesPage";
 import MerchantPage from "@/pages/MerchantPage";
 import AuthPage from "@/pages/AuthPage";
 import UserPage from "@/pages/UserPage";
@@ -20,6 +21,14 @@ function App() {
         element={
           <ProtectedRoute>
             <ShoppingCartPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/favorites"
+        element={
+          <ProtectedRoute>
+            <FavoritesPage />
           </ProtectedRoute>
         }
       />
