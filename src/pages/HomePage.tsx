@@ -17,7 +17,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth, useIsAuthenticated } from "@/stores/authStore";
-import { Search, ShoppingCart, Star, Home, TrendingUp, Heart, Plus } from "lucide-react";
+import { Search, ShoppingCart, Star, Home, TrendingUp, Heart } from "lucide-react";
 import { LoginMascot } from "@/components/LoginMascot";
 import { useState, useEffect } from "react";
 import { getProductList, getCategories } from "@/services/product";
