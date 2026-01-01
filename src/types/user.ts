@@ -9,7 +9,7 @@
 export interface UserProfile {
   id?: number;
   userId?: string;
-  role: string;
+  role?: string;
   username?: string;
   avatar?: string | null;
   email: string;

@@ -7,6 +7,662 @@
   },
   "tags": [],
   "paths": {
+    "/api/v1/addresses": {
+      "post": {
+        "summary": "CreateAddress",
+        "deprecated": false,
+        "description": "创建一个用户地址",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzY3MjU1MTI4LCJleHAiOjE3NjcyNTYwMjh9.4hXFEx63qXGbteuQNKzYbeRx42Jgo3tXnzwH1HsBo1k",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "receiverName": {
+                    "type": "string"
+                  },
+                  "receiverPhone": {
+                    "type": "string"
+                  },
+                  "province": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "district": {
+                    "type": "string"
+                  },
+                  "detailAddress": {
+                    "type": "string"
+                  },
+                  "zipCode": {
+                    "type": "string"
+                  },
+                  "isDefault": {
+                    "type": "boolean"
+                  },
+                  "tag": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "receiverName",
+                  "receiverPhone",
+                  "province",
+                  "city",
+                  "district",
+                  "detailAddress",
+                  "zipCode",
+                  "isDefault",
+                  "tag"
+                ]
+              },
+              "example": {
+                "receiverName": "巨国荣",
+                "receiverPhone": "041 6238 2413",
+                "province": "福建省",
+                "city": "衡乡县",
+                "district": "赛罕区",
+                "detailAddress": "倪桥65136号",
+                "zipCode": "399602",
+                "isDefault": false,
+                "tag": "test"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "receiverName": {
+                      "type": "string"
+                    },
+                    "receiverPhone": {
+                      "type": "string"
+                    },
+                    "province": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "district": {
+                      "type": "string"
+                    },
+                    "detailAddress": {
+                      "type": "string"
+                    },
+                    "zipCode": {
+                      "type": "string"
+                    },
+                    "isDefault": {
+                      "type": "boolean"
+                    },
+                    "tag": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "receiverName",
+                    "receiverPhone",
+                    "province",
+                    "city",
+                    "district",
+                    "detailAddress",
+                    "zipCode",
+                    "isDefault",
+                    "tag"
+                  ]
+                },
+                "example": {
+                  "id": 1,
+                  "receiverName": "巨国荣",
+                  "receiverPhone": "041 6238 2413",
+                  "province": "福建省",
+                  "city": "衡乡县",
+                  "district": "赛罕区",
+                  "detailAddress": "倪桥65136号",
+                  "zipCode": "399602",
+                  "isDefault": false,
+                  "tag": "test"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      },
+      "get": {
+        "summary": "getAddressList",
+        "deprecated": false,
+        "description": "得到当前用户地址列表",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzY3MjU1MTI4LCJleHAiOjE3NjcyNTYwMjh9.4hXFEx63qXGbteuQNKzYbeRx42Jgo3tXnzwH1HsBo1k",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "receiverName": {
+                        "type": "string"
+                      },
+                      "receiverPhone": {
+                        "type": "string"
+                      },
+                      "province": {
+                        "type": "string"
+                      },
+                      "city": {
+                        "type": "string"
+                      },
+                      "district": {
+                        "type": "string"
+                      },
+                      "detailAddress": {
+                        "type": "string"
+                      },
+                      "isDefault": {
+                        "type": "boolean"
+                      },
+                      "tag": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "receiverName",
+                      "receiverPhone",
+                      "province",
+                      "city",
+                      "district",
+                      "detailAddress",
+                      "isDefault",
+                      "tag"
+                    ]
+                  }
+                },
+                "example": [
+                  {
+                    "id": 10,
+                    "receiverName": "张三",
+                    "receiverPhone": "13800138000",
+                    "province": "广东省",
+                    "city": "深圳市",
+                    "district": "南山区",
+                    "detailAddress": "科技园北区",
+                    "isDefault": true,
+                    "tag": "公司"
+                  },
+                  {
+                    "id": 11,
+                    "receiverName": "张三",
+                    "receiverPhone": "13800138000",
+                    "province": "湖北省",
+                    "city": "武汉市",
+                    "district": "洪山区",
+                    "detailAddress": "某某小区1栋",
+                    "isDefault": false,
+                    "tag": "家"
+                  }
+                ]
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/addresses/{addressId}": {
+      "put": {
+        "summary": "UpdateAddress",
+        "deprecated": false,
+        "description": "更新用户的某个地址",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "addressId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzY3MjU1MTI4LCJleHAiOjE3NjcyNTYwMjh9.4hXFEx63qXGbteuQNKzYbeRx42Jgo3tXnzwH1HsBo1k",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "application/json",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "receiverName": {
+                    "type": "string"
+                  },
+                  "receiverPhone": {
+                    "type": "string"
+                  },
+                  "province": {
+                    "type": "string"
+                  },
+                  "city": {
+                    "type": "string"
+                  },
+                  "district": {
+                    "type": "string"
+                  },
+                  "detailAddress": {
+                    "type": "string"
+                  },
+                  "zipCode": {
+                    "type": "string"
+                  },
+                  "isDefault": {
+                    "type": "boolean"
+                  },
+                  "T": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "receiverName",
+                  "receiverPhone",
+                  "province",
+                  "city",
+                  "district",
+                  "detailAddress",
+                  "zipCode",
+                  "isDefault",
+                  "T"
+                ]
+              },
+              "example": {
+                "receiverName": "巨国荣",
+                "receiverPhone": "041 6238 2413",
+                "province": "福建省",
+                "city": "衡乡县",
+                "district": "赛罕区",
+                "detailAddress": "倪桥65136号",
+                "zipCode": "399602",
+                "tag": "家",
+                "isDefault": false
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "receiverName": {
+                      "type": "string"
+                    },
+                    "receiverPhone": {
+                      "type": "string"
+                    },
+                    "province": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "district": {
+                      "type": "string"
+                    },
+                    "detailAddress": {
+                      "type": "string"
+                    },
+                    "zipCode": {
+                      "type": "string"
+                    },
+                    "isDefault": {
+                      "type": "boolean"
+                    },
+                    "tag": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "receiverName",
+                    "receiverPhone",
+                    "province",
+                    "city",
+                    "district",
+                    "detailAddress",
+                    "zipCode",
+                    "isDefault",
+                    "tag"
+                  ]
+                },
+                "example": {
+                  "id": 1,
+                  "receiverName": "巨国荣",
+                  "receiverPhone": "041 6238 2413",
+                  "province": "福建省",
+                  "city": "衡乡县",
+                  "district": "赛罕区",
+                  "detailAddress": "倪桥65136号",
+                  "zipCode": "399602",
+                  "isDefault": false,
+                  "tag": "家"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/addresses/{id}/default": {
+      "patch": {
+        "summary": "SetDefault",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "1",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzY3MjU1MTI4LCJleHAiOjE3NjcyNTYwMjh9.4hXFEx63qXGbteuQNKzYbeRx42Jgo3tXnzwH1HsBo1k",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "receiverName": {
+                      "type": "string"
+                    },
+                    "receiverPhone": {
+                      "type": "string"
+                    },
+                    "province": {
+                      "type": "string"
+                    },
+                    "city": {
+                      "type": "string"
+                    },
+                    "district": {
+                      "type": "string"
+                    },
+                    "detailAddress": {
+                      "type": "string"
+                    },
+                    "zipCode": {
+                      "type": "string"
+                    },
+                    "isDefault": {
+                      "type": "boolean"
+                    },
+                    "tag": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "receiverName",
+                    "receiverPhone",
+                    "province",
+                    "city",
+                    "district",
+                    "detailAddress",
+                    "zipCode",
+                    "isDefault",
+                    "tag"
+                  ]
+                },
+                "example": {
+                  "id": 1,
+                  "receiverName": "巨国荣",
+                  "receiverPhone": "041 6238 2413",
+                  "province": "福建省",
+                  "city": "衡乡县",
+                  "district": "赛罕区",
+                  "detailAddress": "倪桥65136号",
+                  "zipCode": "399602",
+                  "isDefault": true,
+                  "tag": "家"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/addresses/{id}": {
+      "delete": {
+        "summary": "DeleteAddress",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "2",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzY3MjU3MDg1LCJleHAiOjE3NjcyNTc5ODV9.KDHXkV1TXcMVdp0-90MqcWUdngJ9LMpuxzB94DvJMdI",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                },
+                "example": {
+                  "message": "地址已成功删除"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
     "/api/v1/users/profile": {
       "get": {
         "summary": "getUserProfile",
@@ -219,7 +875,12 @@
               "schema": {
                 "$ref": "#/components/schemas/RegisterPayload"
               },
-              "examples": {}
+              "example": {
+                "username": "test",
+                "email": "2840719908@qq.com",
+                "password": "12345678",
+                "verificationCode": "930414"
+              }
             }
           },
           "required": true
@@ -270,13 +931,14 @@
                 "anyOf": [
                   {
                     "$ref": "#/components/schemas/PasswordLoginPayload"
-                  },
-                  {
-                    "$ref": "#/components/schemas/EmailCodeLoginPayload"
                   }
                 ]
               },
-              "examples": {}
+              "example": {
+                "loginType": "password",
+                "email": "2840719908@qq.com",
+                "password": "12345678"
+              }
             }
           },
           "required": true
@@ -319,18 +981,7 @@
         "deprecated": false,
         "description": "",
         "tags": [],
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "description": "",
-            "required": false,
-            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "parameters": [],
         "requestBody": {
           "content": {
             "application/json": {
@@ -338,7 +989,7 @@
                 "$ref": "#/components/schemas/RefreshTokenPayload"
               },
               "example": {
-                "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaF90b2tlbiIsInN1YiI6ImsxemdncTM4IiwiaWF0IjoxNzY0NTc1Nzc3LCJleHAiOjE3NjcxNjc3Nzd9.k8UIx8WSsu1OXtBrHH6D_fiibQYBZUqo6WUX3-1awcY"
+                "refreshToken": "eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaF90b2tlbiIsInN1YiI6InRlc3QiLCJpYXQiOjE3NjcyNTUxMjgsImV4cCI6MTc2OTg0NzEyOH0.oPmULPFvVGWGPT_00qSFlPCExkQZitY36K6E7DaDNRo"
               }
             }
           },
@@ -404,7 +1055,9 @@
               "schema": {
                 "$ref": "#/components/schemas/LogoutPayload"
               },
-              "examples": {}
+              "example": {
+                "refreshToken": "eiusmod irure"
+              }
             }
           },
           "required": true
@@ -444,6 +1097,855 @@
             "phenix_token": []
           }
         ]
+      }
+    },
+    "/api/v1/auth/sendVerificationCode": {
+      "get": {
+        "summary": "sendVerificationCode",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": "2840719908@qq.com",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/productCategory": {
+      "post": {
+        "summary": "AddProductCategory",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzY3MjU3MzIyLCJleHAiOjE3NjcyNTgyMjJ9.Q7mlEp6O-OcSZLtF-DbLJJW4KMzrnzDqQronqcs4khU",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "imageUrl": {
+                    "type": "string"
+                  },
+                  "sortOrder": {
+                    "type": "integer"
+                  },
+                  "isEnabled": {
+                    "type": "boolean"
+                  },
+                  "parentId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1
+                  },
+                  "level": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "name",
+                  "description",
+                  "imageUrl",
+                  "sortOrder",
+                  "parentId",
+                  "level",
+                  "isEnabled"
+                ]
+              },
+              "example": {
+                "name": "倪天娇",
+                "description": "争位车省成力上情知速。会南日证金。候地况。所此林计。少阶确美使信当约酸。来将日程养属今次样。部面能低它马。段次命数导图。",
+                "imageUrl": "https://loremflickr.com/400/400?lock=4101380085840364",
+                "sortOrder": 74,
+                "isEnabled": false,
+                "parentId": 1,
+                "level": 64
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "imageUrl": {
+                      "type": "string"
+                    },
+                    "sortOrder": {
+                      "type": "integer"
+                    },
+                    "isEnabled": {
+                      "type": "boolean"
+                    },
+                    "parentId": {
+                      "type": "integer"
+                    },
+                    "level": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "imageUrl",
+                    "sortOrder",
+                    "isEnabled",
+                    "parentId",
+                    "level"
+                  ]
+                },
+                "example": {
+                  "id": 5,
+                  "name": "倪天娇",
+                  "description": "争位车省成力上情知速。会南日证金。候地况。所此林计。少阶确美使信当约酸。来将日程养属今次样。部面能低它马。段次命数导图。",
+                  "imageUrl": "https://loremflickr.com/400/400?lock=4101380085840364",
+                  "sortOrder": 74,
+                  "isEnabled": false,
+                  "parentId": 1,
+                  "level": 2
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      },
+      "get": {
+        "summary": "ListProductCategory",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaF90b2tlbiIsInN1YiI6InRlc3QiLCJpYXQiOjE3NjcyNTUxMjgsImV4cCI6MTc2OTg0NzEyOH0.oPmULPFvVGWGPT_00qSFlPCExkQZitY36K6E7DaDNRo",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "imageUrl": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "sortOrder": {
+                        "type": "integer"
+                      },
+                      "isEnabled": {
+                        "type": "boolean"
+                      },
+                      "parentId": {
+                        "type": "integer",
+                        "nullable": true
+                      },
+                      "level": {
+                        "type": "integer"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "description",
+                      "imageUrl",
+                      "sortOrder",
+                      "isEnabled",
+                      "parentId",
+                      "level"
+                    ]
+                  }
+                },
+                "example": [
+                  {
+                    "id": 1,
+                    "name": "数码电子",
+                    "description": "手机/电脑/配件",
+                    "imageUrl": "https://static.example.com/cat/electronics.png",
+                    "sortOrder": 1,
+                    "isEnabled": true,
+                    "parentId": null,
+                    "level": 1
+                  },
+                  {
+                    "id": 2,
+                    "name": "家居生活",
+                    "description": "家居用品与收纳",
+                    "imageUrl": "https://static.example.com/cat/home.png",
+                    "sortOrder": 2,
+                    "isEnabled": true,
+                    "parentId": null,
+                    "level": 1
+                  },
+                  {
+                    "id": 3,
+                    "name": "默认分类",
+                    "description": null,
+                    "imageUrl": null,
+                    "sortOrder": 0,
+                    "isEnabled": true,
+                    "parentId": null,
+                    "level": 1
+                  },
+                  {
+                    "id": 4,
+                    "name": "披萨",
+                    "description": null,
+                    "imageUrl": null,
+                    "sortOrder": 0,
+                    "isEnabled": true,
+                    "parentId": null,
+                    "level": 1
+                  },
+                  {
+                    "id": 5,
+                    "name": "倪天娇",
+                    "description": "争位车省成力上情知速。会南日证金。候地况。所此林计。少阶确美使信当约酸。来将日程养属今次样。部面能低它马。段次命数导图。",
+                    "imageUrl": "https://loremflickr.com/400/400?lock=4101380085840364",
+                    "sortOrder": 74,
+                    "isEnabled": false,
+                    "parentId": 1,
+                    "level": 2
+                  }
+                ]
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/productCategory/{id}": {
+      "put": {
+        "summary": "UpdateProductCategory",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "5",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaF90b2tlbiIsInN1YiI6InRlc3QiLCJpYXQiOjE3NjcyNTUxMjgsImV4cCI6MTc2OTg0NzEyOH0.oPmULPFvVGWGPT_00qSFlPCExkQZitY36K6E7DaDNRo",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "type": "string"
+                  },
+                  "imageUrl": {
+                    "type": "string"
+                  },
+                  "sortOrder": {
+                    "type": "integer"
+                  },
+                  "isEnabled": {
+                    "type": "boolean"
+                  },
+                  "parentId": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 1
+                  },
+                  "level": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "name",
+                  "description",
+                  "imageUrl",
+                  "sortOrder",
+                  "parentId",
+                  "level",
+                  "isEnabled"
+                ]
+              },
+              "example": {
+                "name": "倪天娇",
+                "description": "争位车省成力上情知速。会南日证金。候地况。所此林计。少阶确美使信当约酸。来将日程养属今次样。部面能低它马。段次命数导图。",
+                "imageUrl": "https://loremflickr.com/400/400?lock=4101380085840364",
+                "sortOrder": 74,
+                "isEnabled": false,
+                "parentId": 1,
+                "level": 2
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "type": "string"
+                    },
+                    "imageUrl": {
+                      "type": "string"
+                    },
+                    "sortOrder": {
+                      "type": "integer"
+                    },
+                    "isEnabled": {
+                      "type": "boolean"
+                    },
+                    "parentId": {
+                      "type": "integer"
+                    },
+                    "level": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "imageUrl",
+                    "sortOrder",
+                    "isEnabled",
+                    "parentId",
+                    "level"
+                  ]
+                },
+                "example": {
+                  "id": 5,
+                  "name": "倪天娇",
+                  "description": "争位车省成力上情知速。会南日证金。候地况。所此林计。少阶确美使信当约酸。来将日程养属今次样。部面能低它马。段次命数导图。",
+                  "imageUrl": "https://loremflickr.com/400/400?lock=4101380085840364",
+                  "sortOrder": 74,
+                  "isEnabled": false,
+                  "parentId": 1,
+                  "level": 2
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      },
+      "delete": {
+        "summary": "DeleteProductCategory",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "5",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaF90b2tlbiIsInN1YiI6InRlc3QiLCJpYXQiOjE3NjcyNTUxMjgsImV4cCI6MTc2OTg0NzEyOH0.oPmULPFvVGWGPT_00qSFlPCExkQZitY36K6E7DaDNRo",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "message"
+                  ]
+                },
+                "example": {
+                  "message": "地址已成功删除：id=5"
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/productImages": {
+      "post": {
+        "summary": "AddProductImage",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJ0b2tlbl90eXBlIjoicmVmcmVzaF90b2tlbiIsInN1YiI6InRlc3QiLCJpYXQiOjE3NjcyNTUxMjgsImV4cCI6MTc2OTg0NzEyOH0.oPmULPFvVGWGPT_00qSFlPCExkQZitY36K6E7DaDNRo",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "imageUrl": {
+                    "type": "string"
+                  },
+                  "sortOrder": {
+                    "type": "integer"
+                  },
+                  "isMain": {
+                    "type": "boolean"
+                  },
+                  "productId": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "imageUrl",
+                  "sortOrder",
+                  "isMain",
+                  "productId"
+                ]
+              },
+              "example": {
+                "imageUrl": "https://loremflickr.com/400/400?lock=3836033829980921",
+                "sortOrder": 36,
+                "isMain": false,
+                "productId": 101
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "imageUrl": {
+                      "type": "string"
+                    },
+                    "sortOrder": {
+                      "type": "integer"
+                    },
+                    "isMain": {
+                      "type": "boolean"
+                    },
+                    "productId": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "imageUrl",
+                    "sortOrder",
+                    "isMain",
+                    "productId"
+                  ]
+                },
+                "example": {
+                  "id": 205,
+                  "imageUrl": "https://loremflickr.com/400/400?lock=3836033829980921",
+                  "sortOrder": 36,
+                  "isMain": false,
+                  "productId": 101
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/productImages/{productId}": {
+      "get": {
+        "summary": "ListProductImage",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/productImages/{id}/setMain": {
+      "put": {
+        "summary": "SetMain",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/productImages/{id}": {
+      "delete": {
+        "summary": "DeleteProductImage",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
       }
     },
     "/api/v1/products": {
@@ -673,6 +2175,674 @@
           }
         ]
       }
+    },
+    "/api/v1/orders": {
+      "get": {
+        "summary": "getOrdersList",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "orders": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Order"
+                      }
+                    }
+                  },
+                  "required": [
+                    "orders"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/orders/{orderId}": {
+      "get": {
+        "summary": "getOrderById",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "orderId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "order": {
+                      "$ref": "#/components/schemas/Order"
+                    }
+                  },
+                  "required": [
+                    "order"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/orders/pay": {
+      "post": {
+        "summary": "payOrder",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "productId"
+                ]
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "orders": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Order"
+                      }
+                    }
+                  },
+                  "required": [
+                    "orders"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/favourites/getFavourites": {
+      "get": {
+        "summary": "getFavouriteProductsList",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJhZG1pblRlc3QiLCJpYXQiOjE3NjcwMjAzNzcsImV4cCI6MTc2NzAyMTI3N30.rU0sUECZ1WyGv6lqCln84HrCnoHJ8K--Qu1sz-dopTM",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  },
+                  "minItems": 0,
+                  "uniqueItems": true
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/favourites/addFavourite": {
+      "post": {
+        "summary": "addProductToFavourites",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJhZG1pblRlc3QiLCJpYXQiOjE3NjcwMjAzNzcsImV4cCI6MTc2NzAyMTI3N30.rU0sUECZ1WyGv6lqCln84HrCnoHJ8K--Qu1sz-dopTM",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": {
+                    "type": "string",
+                    "title": "商品ID"
+                  },
+                  "remark": {
+                    "type": "string",
+                    "title": "商品描述"
+                  }
+                },
+                "required": [
+                  "productId",
+                  "remark"
+                ]
+              },
+              "example": {
+                "productId": "1",
+                "remark": "nisi minim labore proident"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/favourites/rmProductFromFavourites": {
+      "delete": {
+        "summary": "rmProductFromFavourites",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "query",
+            "description": "",
+            "required": false,
+            "example": 1,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJhZG1pblRlc3QiLCJpYXQiOjE3NjcwMjE1MjgsImV4cCI6MTc2NzAyMjQyOH0.kTxXINSNdkNIZntjwSCJd9UqQDskA-n2x3x-5iW197c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/cart": {
+      "get": {
+        "summary": "getCartProductsList",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Product"
+                  },
+                  "minItems": 0,
+                  "uniqueItems": true
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "summary": "addProductToCart",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "productId": {
+                    "type": "string",
+                    "title": "商品ID"
+                  }
+                },
+                "required": [
+                  "productId"
+                ]
+              },
+              "examples": {}
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/cart/{productId}": {
+      "delete": {
+        "summary": "rmProductFromCart",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "productId",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
+    },
+    "/api/v1/cart/order": {
+      "post": {
+        "summary": "orderProductInCart",
+        "deprecated": false,
+        "description": "产生一个未支付的订单",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMTIzNDU2IiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "orderId": {
+                      "type": "string",
+                      "title": "产生的订单ID"
+                    }
+                  },
+                  "required": [
+                    "orderId"
+                  ]
+                }
+              }
+            },
+            "headers": {}
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": [
+          {
+            "phenix_token": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -727,26 +2897,6 @@
           "role"
         ]
       },
-      "UpdateProfilePayload": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string",
-            "title": "用户名",
-            "description": "若无，则提交null"
-          },
-          "email": {
-            "type": "string",
-            "title": "邮箱",
-            "description": "若无，则提交null"
-          },
-          "avatar": {
-            "type": "string",
-            "title": "头像",
-            "description": "若无，则提交null"
-          }
-        }
-      },
       "ChangePasswordPayload": {
         "type": "object",
         "properties": {
@@ -783,28 +2933,6 @@
         "required": [
           "email",
           "password",
-          "loginType"
-        ]
-      },
-      "EmailCodeLoginPayload": {
-        "type": "object",
-        "properties": {
-          "loginType": {
-            "type": "string",
-            "title": "登录方式"
-          },
-          "email": {
-            "type": "string",
-            "title": "邮箱"
-          },
-          "code": {
-            "type": "string",
-            "title": "验证码"
-          }
-        },
-        "required": [
-          "email",
-          "code",
           "loginType"
         ]
       },
@@ -850,7 +2978,7 @@
             "type": "string",
             "title": "密码"
           },
-          "code": {
+          "verificationCode": {
             "type": "string",
             "title": "验证码"
           }
@@ -859,7 +2987,7 @@
           "username",
           "email",
           "password",
-          "code"
+          "verificationCode"
         ]
       },
       "RefreshTokenPayload": {
@@ -1018,26 +3146,46 @@
           }
         }
       },
-      "ApiArror": {
+      "Order": {
         "type": "object",
         "properties": {
-          "message": {
+          "orderId": {
             "type": "string",
-            "title": "错误消息"
+            "title": "订单ID"
           },
-          "code": {
+          "createdAt": {
             "type": "string",
-            "title": "机器码"
+            "title": "创建时间"
           },
-          "status": {
+          "updatedAt": {
             "type": "string",
-            "title": "错误码"
+            "title": "更新时间"
+          },
+          "productId": {
+            "type": "string",
+            "title": "产品ID"
+          },
+          "userId": {
+            "type": "string",
+            "title": "用户ID"
+          },
+          "isPaid": {
+            "type": "boolean",
+            "title": "用户是否支付"
+          },
+          "isDelivered": {
+            "type": "boolean",
+            "title": "商家是否交付"
           }
         },
         "required": [
-          "message",
-          "code",
-          "status"
+          "orderId",
+          "createdAt",
+          "updatedAt",
+          "productId",
+          "userId",
+          "isPaid",
+          "isDelivered"
         ]
       }
     },

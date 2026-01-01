@@ -9,6 +9,7 @@ import axios, {
   type AxiosResponse,
   type InternalAxiosRequestConfig,
 } from "axios";
+import { useAuth } from "@/stores/authStore";
 
 // --- 标准化错误接口 ---
 // 将这个接口放在这里，因为它是响应拦截器产出的“标准化产品”
@@ -29,6 +30,8 @@ const apiClient = axios.create({
   },
 });
 
+
+
 // --- 配置请求拦截器 ---
 apiClient.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
@@ -36,7 +39,7 @@ apiClient.interceptors.request.use(
     if (config.url?.endsWith('/auth/refreshToken')) {
       return config;
     }
-    const accessToken = localStorage.getItem("access_token");
+    const accessToken = useAuth.getState().accessToken;
     if (accessToken) {
       config.headers.Authorization = `Bearer ${accessToken}`;
     }

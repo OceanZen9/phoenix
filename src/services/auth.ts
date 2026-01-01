@@ -34,6 +34,18 @@ export const register = async (
 };
 
 /**
+ * @service GET /api/v1/auth/sendVerificationCode
+ * @description 发送验证码。
+ */
+export const sendVerificationCode = async (email: string): Promise<void> => {
+  try {
+    await apiClient.get("/api/v1/auth/sendVerificationCode", { params: { email } });
+  } catch (err) {
+    throw err as ApiError;
+  }
+};
+
+/**
  * @service POST /api/v1/auth/login
  * @description 用户登录。
  */
