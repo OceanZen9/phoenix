@@ -52,7 +52,7 @@ function ShoppingCartPage() {
   const handleCheckout = async () => {
     try {
       setIsCheckingOut(true);
-      const result = await orderProductInCart();
+      await orderProductInCart();
       clearCart();
       setCart([]);
       setToastMessage('订单创建成功！');
