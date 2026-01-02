@@ -11,6 +11,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useAuth } from "@/stores/authStore";
+import { sendVerificationCode } from "@/services/auth";
+
 
 import { LoginMascot } from "@/components/LoginMascot";
 
@@ -26,8 +28,37 @@ export default function AuthPage() {
   const [registerUsername, setRegisterUsername] = useState("");
   const [registerEmail, setRegisterEmail] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
-  // In a real app, you'd want to get the code from an email
-  const [registerCode] = useState("123456"); 
+  const [registerCode, setRegisterCode] = useState(""); 
+  const [countdown, setCountdown] = useState(0);
+  const [isSendingCode, setIsSendingCode] = useState(false);
+
+  const handleSendCode = async () => {
+    if (!registerEmail) {
+      // TODO: Show toast error
+      console.error("Please enter email");
+      return;
+    }
+    if (countdown > 0) return;
+
+    setIsSendingCode(true);
+    try {
+      await sendVerificationCode(registerEmail);
+      setCountdown(60);
+      const timer = setInterval(() => {
+        setCountdown((prev) => {
+          if (prev <= 1) {
+            clearInterval(timer);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    } catch (error) {
+      console.error("Failed to send verification code", error);
+    } finally {
+      setIsSendingCode(false);
+    }
+  };
 
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -164,6 +195,27 @@ export default function AuthPage() {
                       value={registerPassword}
                       onChange={(e) => setRegisterPassword(e.target.value)}
                     />
+                  </div>
+                  <div className="grid gap-2">
+                    <Label htmlFor="register-code">验证码</Label>
+                    <div className="flex gap-2">
+                      <Input
+                        id="register-code"
+                        placeholder="请输入验证码"
+                        required
+                        value={registerCode}
+                        onChange={(e) => setRegisterCode(e.target.value)}
+                      />
+                      <Button 
+                        type="button" 
+                        variant="outline" 
+                        disabled={countdown > 0 || isSendingCode}
+                        onClick={handleSendCode}
+                        className="w-[120px]"
+                      >
+                        {countdown > 0 ? `${countdown}s` : "获取验证码"}
+                      </Button>
+                    </div>
                   </div>
                   <Button type="submit" className="w-full">
                     注册

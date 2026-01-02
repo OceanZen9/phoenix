@@ -53,11 +53,19 @@ const UserPage: React.FC = () => {
 
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
+    console.log("=== handleUpdate triggered ==="); // DEBUG
+    console.log("FormData being submitted:", formData); // DEBUG
     setIsUpdating(true);
     setUpdateStatus(null);
     try {
-      const updatedProfile = await updateUserProfile(formData);
-      setUserProfile(updatedProfile);
+      console.log("Sending PATCH request to /api/v1/users/profile..."); // DEBUG
+      await updateUserProfile(formData);
+      console.log("PATCH request successful. Refetching profile..."); // DEBUG
+      
+      // 重新获取用户信息以确保数据显示最新
+      const profile = await getUserProfile();
+      console.log("Refetched profile:", profile); // DEBUG
+      setUserProfile(profile);
       setUpdateStatus('success');
       setIsEditMode(false); // Switch back to display mode on success
     } catch (err) {
@@ -117,7 +125,7 @@ const UserPage: React.FC = () => {
         <label htmlFor="username">用户名</label>
         <Input
           id="username"
-          value={formData.username}
+          value={formData.username || ''}
           onChange={handleInputChange}
         />
       </div>
@@ -126,7 +134,7 @@ const UserPage: React.FC = () => {
         <Input
           id="email"
           type="email"
-          value={formData.email}
+          value={formData.email || ''}
           onChange={handleInputChange}
         />
       </div>
