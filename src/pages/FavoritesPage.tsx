@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart, ShoppingCart, Trash2 } from 'lucide-react';
+import { Heart, ShoppingCart} from 'lucide-react';
 import { getFavorites, removeFromFavorites } from '@/services/cart';
 import { addToCart } from '@/services/cart';
 import { getProductMainImage } from '@/services/product';
