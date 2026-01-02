@@ -34,3 +34,9 @@ export interface ChangePasswordPayload {
   oldPassword: string;
   newPassword:string;
 }
+
+export interface GenericResponse<T> {
+  code: number;
+  message: string;
+  data: T;
+}

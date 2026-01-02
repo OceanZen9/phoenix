@@ -2,6 +2,7 @@ import type {
   UserProfile,
   UpdateProfilePayload,
   ChangePasswordPayload,
+  GenericResponse,
 } from "@/types/user";
 
 import apiClient, { type ApiError } from "./apiClient";
@@ -12,8 +13,8 @@ import apiClient, { type ApiError } from "./apiClient";
  */
 export const getUserProfile = async (): Promise<UserProfile> => {
   try {
-    const response = await apiClient.get<UserProfile>(`/api/v1/users/profile?_t=${new Date().getTime()}`);
-    return response.data;
+    const response = await apiClient.get<GenericResponse<UserProfile>>(`/api/v1/users/profile?_t=${new Date().getTime()}`);
+    return response.data.data;
   } catch (err) {
     throw err as ApiError;
   }
@@ -27,11 +28,11 @@ export const updateUserProfile = async (
   payload: UpdateProfilePayload
 ): Promise<UserProfile> => {
   try {
-    const response = await apiClient.patch<UserProfile>(
+    const response = await apiClient.patch<GenericResponse<UserProfile>>(
       "/api/v1/users/profile",
       payload
     );
-    return response.data;
+    return response.data.data;
   } catch (err) {
     throw err as ApiError;
   }
@@ -45,11 +46,11 @@ export const changePassword = async (
   payload: ChangePasswordPayload
 ): Promise<UserProfile> => {
   try {
-    const response = await apiClient.patch<UserProfile>(
+    const response = await apiClient.patch<GenericResponse<UserProfile>>(
       "/api/v1/users/change-password",
       payload
     );
-    return response.data;
+    return response.data.data;
   } catch (err) {
     throw err as ApiError;
   }
