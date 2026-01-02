@@ -77,6 +77,10 @@ function ProductDetailPage() {
           console.log('[DEBUG] 正在获取商品评论...');
           commentsData = await getProductComments(productId);
           console.log('[DEBUG] 商品评论获取成功, 数量:', commentsData.length);
+          console.log('[DEBUG] 评论原始数据:', JSON.stringify(commentsData, null, 2));
+          if (commentsData.length > 0) {
+            console.log('[DEBUG] 第一条评论的user对象:', commentsData[0].user);
+          }
           setComments(commentsData);
         } catch (error) {
           console.error('[DEBUG] 获取商品评论失败:', error);
@@ -301,11 +305,11 @@ function ProductDetailPage() {
                 <div key={comment.id} className="flex gap-3 pb-4 border-b last:border-0">
                   <Avatar>
                     <AvatarImage src={comment.user.avatar} />
-                    <AvatarFallback>{comment.user.nickname.charAt(0)}</AvatarFallback>
+                    <AvatarFallback>{(comment.user.nickname || '匿名用户').charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                   <div className="flex-1 space-y-1">
                     <div className="flex items-center justify-between">
-                      <span className="font-medium">{comment.user.nickname}</span>
+                      <span className="font-medium">{comment.user.nickname || '匿名用户'}</span>
                       <div className="flex gap-0.5">
                         {[...Array(5)].map((_, i) => (
                           <Star
