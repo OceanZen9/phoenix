@@ -37,3 +37,14 @@ export interface Category {
  * @description 商品详情，与Product结构基本一致，可按需扩展
  */
 export type ProductDetail = Product;
+
+/**
+ * @description 商品图片结构
+ */
+export interface ProductImage {
+  id: number;
+  imageUrl: string;
+  sortOrder: number;
+  isMain: boolean;
+  productId: number;
+}

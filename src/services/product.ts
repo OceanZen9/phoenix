@@ -1,4 +1,4 @@
-import type { ProductDetail, Product, Category } from "@/types/product";
+import type { ProductDetail, Product, Category, ProductImage } from "@/types/product";
 import apiClient, { type ApiError } from "./apiClient";
 
 
@@ -25,6 +25,33 @@ export const getProductById = async (product_id: string): Promise<ProductDetail>
     return response.data;
   } catch (err) {
     throw err as ApiError;
+  }
+};
+
+/**
+ * @service GET /api/v1/productImages/product/{productId}
+ * @description 获取商品图片列表。
+ */
+export const getProductImages = async (productId: string | number): Promise<ProductImage[]> => {
+  try {
+    const response = await apiClient.get<ProductImage[]>(`/api/v1/productImages/product/${productId}`);
+    return response.data;
+  } catch (err) {
+    throw err as ApiError;
+  }
+};
+
+/**
+ * @service GET /api/v1/productImages/product/{productId}
+ * @description 获取商品主图片。
+ */
+export const getProductMainImage = async (productId: string | number): Promise<string | null> => {
+  try {
+    const images = await getProductImages(productId);
+    const mainImage = images.find(img => img.isMain);
+    return mainImage?.imageUrl || images[0]?.imageUrl || null;
+  } catch (err) {
+    return null;
   }
 };
 

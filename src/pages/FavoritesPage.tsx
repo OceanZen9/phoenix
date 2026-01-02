@@ -4,14 +4,29 @@ import { Button } from '@/components/ui/button';
 import { Heart, ShoppingCart, Trash2 } from 'lucide-react';
 import { getFavorites, removeFromFavorites } from '@/services/cart';
 import { addToCart } from '@/services/cart';
+import { getProductMainImage } from '@/services/product';
 import type { FavoriteItem } from '@/types/cart';
 import { Link } from 'react-router-dom';
 
 function FavoritesPage() {
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const [productImages, setProductImages] = useState<Map<string, string>>(new Map());
 
   useEffect(() => {
-    setFavorites(getFavorites());
+    const loadFavorites = async () => {
+      const favoritesData = getFavorites();
+      setFavorites(favoritesData);
+
+      const imageMap = new Map<string, string>();
+      for (const item of favoritesData) {
+        const mainImage = await getProductMainImage(item.product.productId);
+        if (mainImage) {
+          imageMap.set(item.product.productId, mainImage);
+        }
+      }
+      setProductImages(imageMap);
+    };
+    loadFavorites();
   }, []);
 
   const handleRemove = (productId: string) => {
@@ -55,9 +70,9 @@ function FavoritesPage() {
               <Card key={item.product.productId} className="group hover:shadow-lg transition-shadow">
                 <CardHeader className="p-0">
                   <div className="aspect-square bg-muted rounded-t-lg overflow-hidden relative">
-                    {item.product.imageUrl ? (
+                    {productImages.get(item.product.productId) ? (
                       <img
-                        src={item.product.imageUrl}
+                        src={productImages.get(item.product.productId)}
                         alt={item.product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />

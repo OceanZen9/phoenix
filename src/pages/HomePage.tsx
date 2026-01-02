@@ -18,10 +18,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth, useIsAuthenticated } from "@/stores/authStore";
-import { Search, ShoppingCart, Star, Home, TrendingUp, Heart } from "lucide-react";
+import { Search, ShoppingCart, Star, Home, TrendingUp, Heart, Package } from "lucide-react";
 import { LoginMascot } from "@/components/LoginMascot";
 import { useState, useEffect } from "react";
-import { getProductList, getCategories } from "@/services/product";
+import { getProductList, getCategories, getProductMainImage } from "@/services/product";
 import { addToCart, addToFavorites, removeFromFavorites, isFavorite } from "@/services/cart";
 import type { Product, Category } from "@/types/product";
 
@@ -37,6 +37,7 @@ function HomePage() {
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [productImages, setProductImages] = useState<Map<string, string>>(new Map());
 
   useEffect(() => {
     const loadData = async () => {
@@ -52,6 +53,15 @@ function HomePage() {
 
         const favIds = new Set(productsData.filter(p => isFavorite(p.productId)).map(p => p.productId));
         setFavoriteIds(favIds);
+
+        const imageMap = new Map<string, string>();
+        for (const product of productsData) {
+          const mainImage = await getProductMainImage(product.productId);
+          if (mainImage) {
+            imageMap.set(product.productId, mainImage);
+          }
+        }
+        setProductImages(imageMap);
       } catch (error) {
         console.error('加载数据失败:', error);
       } finally {
@@ -111,6 +121,12 @@ function HomePage() {
             <Link to="/favorites">
               <Star className="h-3 w-3" />
               <span className="sr-only">收藏夹</span>
+            </Link>
+          </Button>
+          <Button variant="ghost" size="sm" className="px-2 h-7 text-xs" asChild>
+            <Link to="/orders">
+              <Package className="h-3 w-3 mr-1" />
+              我的订单
             </Link>
           </Button>
           {isAuthenticated && user ? (
@@ -230,9 +246,9 @@ function HomePage() {
               <Card key={product.productId} className="group hover:shadow-lg transition-shadow">
                 <CardHeader className="p-0">
                   <div className="aspect-square bg-muted rounded-t-lg overflow-hidden">
-                    {product.imageUrl ? (
+                    {productImages.get(product.productId) ? (
                       <img
-                        src={product.imageUrl}
+                        src={productImages.get(product.productId)}
                         alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />

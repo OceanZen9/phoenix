@@ -2,16 +2,36 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Toast } from '@/components/ui/toast';
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
-import { getCart, updateCartItemQuantity, removeFromCart, clearCart } from '@/services/cart';
+import { getCart, updateCartItemQuantity, removeFromCart, clearCart, orderProductInCart } from '@/services/cart';
+import { getProductMainImage } from '@/services/product';
 import type { CartItem } from '@/types/cart';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function ShoppingCartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [productImages, setProductImages] = useState<Map<string, string>>(new Map());
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setCart(getCart());
+    const loadCart = async () => {
+      const cartData = getCart();
+      setCart(cartData);
+
+      const imageMap = new Map<string, string>();
+      for (const item of cartData) {
+        const mainImage = await getProductMainImage(item.product.productId);
+        if (mainImage) {
+          imageMap.set(item.product.productId, mainImage);
+        }
+      }
+      setProductImages(imageMap);
+    };
+    loadCart();
   }, []);
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
@@ -27,6 +47,26 @@ function ShoppingCartPage() {
   const handleClearCart = () => {
     clearCart();
     setCart([]);
+  };
+
+  const handleCheckout = async () => {
+    try {
+      setIsCheckingOut(true);
+      const result = await orderProductInCart();
+      clearCart();
+      setCart([]);
+      setToastMessage('订单创建成功！');
+      setShowToast(true);
+      setTimeout(() => {
+        navigate('/orders');
+      }, 1000);
+    } catch (error) {
+      console.error('创建订单失败:', error);
+      setToastMessage('创建订单失败，请重试');
+      setShowToast(true);
+    } finally {
+      setIsCheckingOut(false);
+    }
   };
 
   const totalPrice = cart.reduce((sum, item) => sum + (item.product.price || 0) * item.quantity, 0);
@@ -64,9 +104,9 @@ function ShoppingCartPage() {
                   <CardContent className="p-6">
                     <div className="flex gap-4">
                       <div className="w-24 h-24 flex-shrink-0 bg-muted rounded-lg overflow-hidden">
-                        {item.product.imageUrl ? (
+                        {productImages.get(item.product.productId) ? (
                           <img
-                            src={item.product.imageUrl}
+                            src={productImages.get(item.product.productId)}
                             alt={item.product.name}
                             className="w-full h-full object-cover"
                           />
@@ -143,14 +183,25 @@ function ShoppingCartPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full" size="lg">
-                  去结算
+                <Button
+                  className="w-full"
+                  size="lg"
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut}
+                >
+                  {isCheckingOut ? '处理中...' : '去结算'}
                 </Button>
               </CardFooter>
             </Card>
           </div>
         )}
       </div>
+
+      <Toast
+        message={toastMessage}
+        show={showToast}
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 }
