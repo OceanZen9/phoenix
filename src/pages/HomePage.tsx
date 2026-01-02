@@ -243,7 +243,7 @@ function HomePage() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredProducts.map((product) => (
-              <Card key={product.productId} className="group hover:shadow-lg transition-shadow">
+              <Card key={product.productId} className="group hover:shadow-lg transition-shadow flex flex-col h-full">
                 <CardHeader className="p-0">
                   <div className="aspect-square bg-muted rounded-t-lg overflow-hidden">
                     {productImages.get(product.productId) ? (
@@ -259,24 +259,24 @@ function HomePage() {
                     )}
                   </div>
                 </CardHeader>
-                <CardContent className="p-4">
-                  <CardTitle className="text-base line-clamp-2 mb-2">
+                <CardContent className="p-3 flex-1 flex flex-col">
+                  <CardTitle className="text-sm line-clamp-2 mb-1 min-h-[2.5rem]">
                     {product.name}
                   </CardTitle>
-                  <CardDescription className="text-sm line-clamp-2 mb-3">
+                  <CardDescription className="text-xs line-clamp-2 mb-2 min-h-[2rem]">
                     {product.description}
                   </CardDescription>
-                  <div className="text-2xl font-bold text-red-600">
+                  <div className="text-lg font-bold text-red-600 mt-auto">
                     ¥{(product.price || 0).toFixed(2)}
                   </div>
                 </CardContent>
-                <CardFooter className="p-4 pt-0 flex gap-2">
+                <CardFooter className="p-3 pt-0 flex gap-2 mt-auto">
                   <Button
                     className="flex-1"
                     size="sm"
                     onClick={() => handleAddToCart(product)}
                   >
-                    <ShoppingCart className="h-4 w-4 mr-1" />
+                    <ShoppingCart className="h-3.5 w-3.5 mr-1" />
                     加入购物车
                   </Button>
                   <Button
@@ -284,7 +284,7 @@ function HomePage() {
                     size="sm"
                     onClick={() => handleToggleFavorite(product)}
                   >
-                    <Heart className={`h-4 w-4 ${favoriteIds.has(product.productId) ? 'fill-current' : ''}`} />
+                    <Heart className={`h-3.5 w-3.5 ${favoriteIds.has(product.productId) ? 'fill-current' : ''}`} />
                   </Button>
                 </CardFooter>
               </Card>
