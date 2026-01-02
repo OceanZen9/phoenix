@@ -55,7 +55,56 @@ apiClient.interceptors.request.use(
 // 它的任务是将所有后端返回的错误，标准化为 ApiError 格式
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response, // 成功时直接返回完整的 response
-  (error: AxiosError): Promise<ApiError> => {
+  async (error: AxiosError) => {
+    const originalRequest = error.config;
+    if (!originalRequest) {
+      return Promise.reject(error);
+    }
+
+    // 如果是 401 错误，且未重试过
+    if (
+      error.response?.status === 401 &&
+      !originalRequest.url?.includes("/auth/refreshToken") &&
+      !(originalRequest as any)._retry
+    ) {
+      (originalRequest as any)._retry = true;
+
+      try {
+        const { refreshToken } = useAuth.getState();
+        
+        if (!refreshToken) {
+           throw new Error("No refresh token available");
+        }
+
+        // 使用原生 axios 发送刷新请求，避免循环引用和拦截器死循环
+        // 注意：这里需要根据实际的 baseURL 拼接完整 URL
+        const baseURL = apiClient.defaults.baseURL || "";
+        const refreshResponse = await axios.post(
+          `${baseURL}/api/v1/auth/refreshToken`,
+          { refreshToken } 
+        );
+
+        const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshResponse.data;
+
+        // 更新 Zustand store
+        useAuth.setState({
+          accessToken: newAccessToken,
+          refreshToken: newRefreshToken,
+        });
+
+        // 更新请求头并重试原请求
+        originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+        return apiClient(originalRequest);
+
+      } catch (refreshError) {
+        // 刷新失败，清空状态并跳转登录
+        useAuth.getState().logout();
+        // 这里可以选择抛出错误或者重定向，视路由守卫实现而定
+        // 为了让通过 UI 感知，还是 reject 出去
+        return Promise.reject(refreshError); 
+      }
+    }
+
     const standardError: ApiError = {
       message: "发生未知错误，请稍后重试。",
     };
