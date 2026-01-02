@@ -2,7 +2,6 @@ import { Route, Routes } from "react-router-dom";
 import HomePage from "@/pages/HomePage";
 import ShoppingCartPage from "@/pages/ShoppingCartPage";
 import FavoritesPage from "@/pages/FavoritesPage";
-import MerchantPage from "@/pages/MerchantPage";
 import AuthPage from "@/pages/AuthPage";
 import UserPage from "@/pages/UserPage";
 import SettingsPage from "@/pages/SettingsPage";
@@ -30,14 +29,6 @@ function App() {
         element={
           <ProtectedRoute>
             <FavoritesPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/merchant"
-        element={
-          <ProtectedRoute>
-            <MerchantPage />
           </ProtectedRoute>
         }
       />

@@ -51,6 +51,10 @@ function HomePage() {
         setProducts(productsData);
         setCategories(categoriesData);
 
+        console.log('商品数据示例:', productsData.slice(0, 2));
+        console.log('分类数据:', categoriesData);
+        console.log('商品分类字段示例:', productsData.slice(0, 5).map(p => ({ id: p.productId, category: p.category, categoryType: typeof p.category })));
+
         const favIds = new Set(productsData.filter(p => isFavorite(p.productId)).map(p => p.productId));
         setFavoriteIds(favIds);
 
@@ -98,7 +102,9 @@ function HomePage() {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory = !selectedCategory || parseInt(product.category) === selectedCategory;
+    const matchesCategory = !selectedCategory ||
+      parseInt(product.category) === selectedCategory ||
+      product.category === String(selectedCategory);
     const matchesSearch = !searchKeyword ||
       product.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
       (product.description && product.description.toLowerCase().includes(searchKeyword.toLowerCase()));

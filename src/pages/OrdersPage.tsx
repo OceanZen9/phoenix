@@ -226,32 +226,34 @@ function OrdersPage() {
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>确认支付</AlertDialogTitle>
-            <AlertDialogDescription>
-              {selectedOrder?.product && (
-                <div className="mt-4">
-                  <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
-                    <div className="w-16 h-16 bg-muted rounded overflow-hidden flex-shrink-0">
-                      {selectedOrder.productImage ? (
-                        <img
-                          src={selectedOrder.productImage}
-                          alt={selectedOrder.product.name}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center">
-                          <span className="text-xl">📦</span>
+            <AlertDialogDescription asChild>
+              <div>
+                {selectedOrder?.product && (
+                  <div className="mt-4">
+                    <div className="flex items-center gap-3 p-3 bg-slate-50 rounded-lg">
+                      <div className="w-16 h-16 bg-muted rounded overflow-hidden flex-shrink-0">
+                        {selectedOrder.productImage ? (
+                          <img
+                            src={selectedOrder.productImage}
+                            alt={selectedOrder.product.name}
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center">
+                            <span className="text-xl">📦</span>
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="font-medium truncate">{selectedOrder.product.name}</div>
+                        <div className="text-2xl font-bold text-red-600 mt-1">
+                          ¥{(selectedOrder.product.price || 0).toFixed(2)}
                         </div>
-                      )}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-medium truncate">{selectedOrder.product.name}</p>
-                      <p className="text-2xl font-bold text-red-600 mt-1">
-                        ¥{(selectedOrder.product.price || 0).toFixed(2)}
-                      </p>
+                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>

@@ -2037,6 +2037,384 @@
         "security": []
       }
     },
+    "/api/v1/products/{product_id}/comments": {
+      "get": {
+        "summary": "getCommentsOfPro",
+        "deprecated": false,
+        "description": "获得某个商品的所有评论",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "example": "101",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer"
+                      },
+                      "productId": {
+                        "type": "integer"
+                      },
+                      "user": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "nickname": {
+                            "type": "string"
+                          },
+                          "avatar": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "nickname",
+                          "avatar"
+                        ]
+                      },
+                      "rating": {
+                        "type": "integer"
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "createdTime": {
+                        "type": "string"
+                      },
+                      "updatedTime": {
+                        "type": "string"
+                      }
+                    }
+                  }
+                },
+                "example": [
+                  {
+                    "id": 9001,
+                    "productId": 101,
+                    "user": {
+                      "id": 1001,
+                      "nickname": "小川",
+                      "avatar": "..."
+                    },
+                    "rating": 5,
+                    "content": "质量不错，发货很快。",
+                    "createdTime": "2026-01-02T10:10:10",
+                    "updatedTime": "2026-01-02T10:10:10"
+                  }
+                ]
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "$ref": "#/components/responses/非法请求",
+            "description": ""
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      },
+      "post": {
+        "summary": "addCommentOnPro",
+        "deprecated": false,
+        "description": "添加对某个商品的评论，需要登录",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "content",
+                  "rating"
+                ]
+              },
+              "example": {
+                "content": "质量不错，发货很快。",
+                "rating": 5
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "$ref": "#/components/responses/非法请求",
+            "description": ""
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/products/{product_id}/comments/{comment_id}": {
+      "put": {
+        "summary": "UpdateComment",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "content": {
+                    "type": "string"
+                  },
+                  "rating": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "content",
+                  "rating"
+                ]
+              },
+              "example": {
+                "content": "补充：用了两天更满意。",
+                "rating": 4
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            },
+            "headers": {}
+          },
+          "400": {
+            "$ref": "#/components/responses/非法请求",
+            "description": ""
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      },
+      "get": {
+        "summary": "DeleteComment",
+        "deprecated": false,
+        "description": "",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "product_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "comment_id",
+            "in": "path",
+            "description": "",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "description": "",
+            "required": false,
+            "example": "",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {}
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/非法请求",
+            "description": ""
+          },
+          "401": {
+            "$ref": "#/components/responses/未认证",
+            "description": ""
+          },
+          "403": {
+            "$ref": "#/components/responses/权限不足",
+            "description": ""
+          },
+          "404": {
+            "$ref": "#/components/responses/未找到",
+            "description": ""
+          },
+          "500": {
+            "$ref": "#/components/responses/服务器内部错误",
+            "description": ""
+          }
+        },
+        "security": []
+      }
+    },
     "/api/v1/products": {
       "get": {
         "summary": "getProductsList",
@@ -3459,6 +3837,17 @@
                 "code",
                 "status"
               ]
+            }
+          }
+        }
+      },
+      "非法请求": {
+        "description": "",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {}
             }
           }
         }
