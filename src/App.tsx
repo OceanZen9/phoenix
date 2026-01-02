@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import HomePage from "@/pages/HomePage";
+import ProductDetailPage from "@/pages/ProductDetailPage";
 import ShoppingCartPage from "@/pages/ShoppingCartPage";
 import FavoritesPage from "@/pages/FavoritesPage";
 import AuthPage from "@/pages/AuthPage";
@@ -15,6 +16,10 @@ function App() {
       <Route
         path="/"
         element={<HomePage />}
+      />
+      <Route
+        path="/product/:productId"
+        element={<ProductDetailPage />}
       />
       <Route
         path="/cart"

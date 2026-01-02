@@ -68,40 +68,45 @@ function FavoritesPage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {favorites.map((item) => (
               <Card key={item.product.productId} className="group hover:shadow-lg transition-shadow flex flex-col h-full">
-                <CardHeader className="p-0">
-                  <div className="aspect-square bg-muted rounded-t-lg overflow-hidden relative">
-                    {productImages.get(item.product.productId) ? (
-                      <img
-                        src={productImages.get(item.product.productId)}
-                        alt={item.product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-                        <span className="text-4xl text-slate-400">📦</span>
-                      </div>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-2 right-2 h-7 w-7 bg-white/80 hover:bg-white text-red-600"
-                      onClick={() => handleRemove(item.product.productId)}
-                    >
-                      <Heart className="h-4 w-4 fill-current" />
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardContent className="p-3 flex-1 flex flex-col">
-                  <CardTitle className="text-sm line-clamp-2 mb-1 min-h-[2.5rem]">
-                    {item.product.name}
-                  </CardTitle>
-                  <CardDescription className="text-xs line-clamp-2 mb-2 min-h-[2rem]">
-                    {item.product.description}
-                  </CardDescription>
-                  <div className="text-lg font-bold text-red-600 mt-auto">
-                    ¥{(item.product.price || 0).toFixed(2)}
-                  </div>
-                </CardContent>
+                <Link to={`/product/${item.product.productId}`} className="flex-1 flex flex-col">
+                  <CardHeader className="p-0">
+                    <div className="aspect-square bg-muted rounded-t-lg overflow-hidden relative">
+                      {productImages.get(item.product.productId) ? (
+                        <img
+                          src={productImages.get(item.product.productId)}
+                          alt={item.product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                          <span className="text-4xl text-slate-400">📦</span>
+                        </div>
+                      )}
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="absolute top-2 right-2 h-7 w-7 bg-white/80 hover:bg-white text-red-600"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleRemove(item.product.productId);
+                        }}
+                      >
+                        <Heart className="h-4 w-4 fill-current" />
+                      </Button>
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-3 flex-1 flex flex-col">
+                    <CardTitle className="text-sm line-clamp-2 mb-1 min-h-[2.5rem]">
+                      {item.product.name}
+                    </CardTitle>
+                    <CardDescription className="text-xs line-clamp-2 mb-2 min-h-[2rem]">
+                      {item.product.description}
+                    </CardDescription>
+                    <div className="text-lg font-bold text-red-600 mt-auto">
+                      ¥{(item.product.price || 0).toFixed(2)}
+                    </div>
+                  </CardContent>
+                </Link>
                 <CardFooter className="p-3 pt-0 mt-auto">
                   <Button
                     className="w-full"
