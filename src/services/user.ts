@@ -12,7 +12,7 @@ import apiClient, { type ApiError } from "./apiClient";
  */
 export const getUserProfile = async (): Promise<UserProfile> => {
   try {
-    const response = await apiClient.get<UserProfile>("/api/v1/users/profile");
+    const response = await apiClient.get<UserProfile>(`/api/v1/users/profile?_t=${new Date().getTime()}`);
     return response.data;
   } catch (err) {
     throw err as ApiError;

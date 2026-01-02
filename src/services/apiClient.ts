@@ -53,6 +53,27 @@ apiClient.interceptors.request.use(
 
 // --- 配置响应拦截器 ---
 // 它的任务是将所有后端返回的错误，标准化为 ApiError 格式
+// --- 变量用于处理并发刷新 Token ---
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value?: unknown) => void;
+  reject: (reason?: any) => void;
+}> = [];
+
+const processQueue = (error: any, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
+
+// --- 配置响应拦截器 ---
+// 它的任务是将所有后端返回的错误，标准化为 ApiError 格式
 apiClient.interceptors.response.use(
   (response: AxiosResponse) => response, // 成功时直接返回完整的 response
   async (error: AxiosError) => {
@@ -72,7 +93,24 @@ apiClient.interceptors.response.use(
       !originalRequest.url?.includes("/auth/refreshToken") &&
       !(originalRequest as RetryRequestConfig)._retry
     ) {
+      if (isRefreshing) {
+        // 如果正在刷新，则将请求加入队列
+        return new Promise(function (resolve, reject) {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            if (originalRequest.headers) {
+              originalRequest.headers.Authorization = `Bearer ${token}`;
+            }
+            return apiClient(originalRequest);
+          })
+          .catch((err) => {
+            return Promise.reject(err);
+          });
+      }
+
       (originalRequest as RetryRequestConfig)._retry = true;
+      isRefreshing = true;
 
       try {
         const { refreshToken } = useAuth.getState();
@@ -97,16 +135,22 @@ apiClient.interceptors.response.use(
           refreshToken: newRefreshToken,
         });
 
+        // 处理队列中的请求
+        processQueue(null, newAccessToken);
+
         // 更新请求头并重试原请求
         originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
         return apiClient(originalRequest);
 
       } catch (refreshError) {
-        // 刷新失败，清空状态并跳转登录
+        // 刷新失败，处理队列，清空状态并跳转登录
+        processQueue(refreshError, null);
         useAuth.getState().logout();
         // 这里可以选择抛出错误或者重定向，视路由守卫实现而定
         // 为了让通过 UI 感知，还是 reject 出去
         return Promise.reject(refreshError); 
+      } finally {
+        isRefreshing = false;
       }
     }
 
