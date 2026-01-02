@@ -101,7 +101,7 @@ export const syncCartToServer = async (): Promise<void> => {
   try {
     await clearServerCart();
   } catch (_error) {
-    console.log('清空服务器购物车失败，可能购物车本来就是空的');
+    console.log('清空服务器购物车失败',_error);
   }
 
   const cart = getCart();
