@@ -32,8 +32,9 @@ const UserPage: React.FC = () => {
         const profile = await getUserProfile();
         setUserProfile(profile);
         setFormData({
-          username: profile.username,
-          email: profile.email,
+          nickname: profile.nickname || '',
+          phone: profile.phone || '',
+          avatar: profile.avatar || '',
         });
       } catch (err) {
         setError('获取用户信息失败，请稍后再试。');
@@ -80,8 +81,9 @@ const UserPage: React.FC = () => {
     // Reset form data to the original profile data
     if (userProfile) {
       setFormData({
-        username: userProfile.username,
-        email: userProfile.email,
+        nickname: userProfile.nickname || '',
+        phone: userProfile.phone || '',
+        avatar: userProfile.avatar || '',
       });
     }
     setIsEditMode(false);
@@ -93,28 +95,45 @@ const UserPage: React.FC = () => {
 
   const renderDisplayMode = () => (
     <div className="space-y-4">
+      <div className="flex items-center space-x-4 mb-6">
+        <label className="font-semibold min-w-16">头像</label>
+        <Avatar className="h-16 w-16">
+          <AvatarImage
+            src={userProfile?.avatar || undefined}
+            alt={userProfile?.nickname || userProfile?.username || '用户'}
+          />
+          <AvatarFallback>
+            {(userProfile?.nickname || userProfile?.username || 'U').charAt(0).toUpperCase()}
+          </AvatarFallback>
+        </Avatar>
+      </div>
+
       <div className="grid gap-2">
         <label>用户名</label>
-        <p className="font-semibold">{userProfile?.username || '未设置'}</p>
+        <p className="font-semibold text-gray-500">{userProfile?.username}</p>
+      </div>
+      <div className="grid gap-2">
+        <label>昵称</label>
+        <p className="font-semibold">{userProfile?.nickname || '未设置'}</p>
+      </div>
+      <div className="grid gap-2">
+        <label>手机号</label>
+        <p className="font-semibold">{userProfile?.phone || '未设置'}</p>
       </div>
       <div className="grid gap-2">
         <label>邮箱</label>
-        <p className="font-semibold">{userProfile?.email}</p>
+        <p className="font-semibold text-gray-500">{userProfile?.email}</p>
       </div>
-      <div className="grid gap-2">
+       <div className="grid gap-2">
         <label>角色</label>
-        <p className="font-semibold">{userProfile?.role}</p>
-      </div>
-      <div className="grid gap-2">
-        <label>地址</label>
-        <p className="font-semibold">{userProfile?.address || '未设置'}</p>
+        <p className="font-semibold text-gray-500">{userProfile?.role}</p>
       </div>
       <div className="grid gap-2">
         <label>加入时间</label>
-        <p className="font-semibold">{userProfile?.createdAt ? new Date(userProfile.createdAt).toLocaleString() : '未知'}</p>
+        <p className="font-semibold text-gray-500">{userProfile?.createdAt ? new Date(userProfile.createdAt).toLocaleString() : '未知'}</p>
       </div>
       <Button onClick={() => setIsEditMode(true)} className="w-full">
-        修改信息
+        修改个人信息
       </Button>
     </div>
   );
@@ -122,24 +141,34 @@ const UserPage: React.FC = () => {
   const renderEditMode = () => (
     <form onSubmit={handleUpdate} className="space-y-4">
       <div className="grid gap-2">
-        <label htmlFor="username">用户名</label>
+        <label htmlFor="avatar">头像 URL</label>
         <Input
-          id="username"
-          value={formData.username || ''}
+          id="avatar"
+          value={formData.avatar || ''}
           onChange={handleInputChange}
+          placeholder="请输入头像图片链接"
         />
       </div>
       <div className="grid gap-2">
-        <label htmlFor="email">邮箱</label>
+        <label htmlFor="nickname">昵称</label>
         <Input
-          id="email"
-          type="email"
-          value={formData.email || ''}
+          id="nickname"
+          value={formData.nickname || ''}
           onChange={handleInputChange}
+          placeholder="请输入昵称"
+        />
+      </div>
+      <div className="grid gap-2">
+        <label htmlFor="phone">手机号</label>
+        <Input
+          id="phone"
+          value={formData.phone || ''}
+          onChange={handleInputChange}
+          placeholder="请输入手机号"
         />
       </div>
       {updateStatus === 'success' && (
-        <p className="text-green-500">用户信息更新成功！</p>
+        <p className="text-green-500">此人信息更新成功！</p>
       )}
       {updateStatus === 'error' && (
         <p className="text-red-500">更新失败，请稍后再试。</p>
