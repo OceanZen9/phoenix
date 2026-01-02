@@ -1,17 +1,32 @@
 import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { Heart, ShoppingCart, Trash2 } from 'lucide-react';
+import { Heart, ShoppingCart} from 'lucide-react';
 import { getFavorites, removeFromFavorites } from '@/services/cart';
 import { addToCart } from '@/services/cart';
+import { getProductMainImage } from '@/services/product';
 import type { FavoriteItem } from '@/types/cart';
 import { Link } from 'react-router-dom';
 
 function FavoritesPage() {
   const [favorites, setFavorites] = useState<FavoriteItem[]>([]);
+  const [productImages, setProductImages] = useState<Map<string, string>>(new Map());
 
   useEffect(() => {
-    setFavorites(getFavorites());
+    const loadFavorites = async () => {
+      const favoritesData = getFavorites();
+      setFavorites(favoritesData);
+
+      const imageMap = new Map<string, string>();
+      for (const item of favoritesData) {
+        const mainImage = await getProductMainImage(item.product.productId);
+        if (mainImage) {
+          imageMap.set(item.product.productId, mainImage);
+        }
+      }
+      setProductImages(imageMap);
+    };
+    loadFavorites();
   }, []);
 
   const handleRemove = (productId: string) => {
@@ -20,7 +35,7 @@ function FavoritesPage() {
   };
 
   const handleAddToCart = (productId: string) => {
-    const product = favorites.find(item => item.product.id === productId)?.product;
+    const product = favorites.find(item => item.product.productId === productId)?.product;
     if (product) {
       addToCart(product, 1);
     }
@@ -52,13 +67,13 @@ function FavoritesPage() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {favorites.map((item) => (
-              <Card key={item.product.id} className="group hover:shadow-lg transition-shadow">
+              <Card key={item.product.productId} className="group hover:shadow-lg transition-shadow flex flex-col h-full">
                 <CardHeader className="p-0">
                   <div className="aspect-square bg-muted rounded-t-lg overflow-hidden relative">
-                    {item.product.image_url ? (
+                    {productImages.get(item.product.productId) ? (
                       <img
-                        src={item.product.image_url}
-                        alt={item.product.product_name}
+                        src={productImages.get(item.product.productId)}
+                        alt={item.product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
                     ) : (
@@ -69,42 +84,32 @@ function FavoritesPage() {
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="absolute top-2 right-2 bg-white/80 hover:bg-white text-red-600"
-                      onClick={() => handleRemove(item.product.id)}
+                      className="absolute top-2 right-2 h-7 w-7 bg-white/80 hover:bg-white text-red-600"
+                      onClick={() => handleRemove(item.product.productId)}
                     >
-                      <Heart className="h-5 w-5 fill-current" />
+                      <Heart className="h-4 w-4 fill-current" />
                     </Button>
                   </div>
                 </CardHeader>
-                <CardContent className="p-4">
-                  <CardTitle className="text-base line-clamp-2 mb-2">
-                    {item.product.product_name}
+                <CardContent className="p-3 flex-1 flex flex-col">
+                  <CardTitle className="text-sm line-clamp-2 mb-1 min-h-[2.5rem]">
+                    {item.product.name}
                   </CardTitle>
-                  <CardDescription className="text-sm line-clamp-2 mb-3">
-                    {item.product.product_desc}
+                  <CardDescription className="text-xs line-clamp-2 mb-2 min-h-[2rem]">
+                    {item.product.description}
                   </CardDescription>
-                  <div className="text-2xl font-bold text-red-600">
-                    ¥{item.product.product_price.toFixed(2)}
-                  </div>
-                  <div className="text-xs text-muted-foreground mt-2">
-                    收藏于 {new Date(item.addedAt).toLocaleDateString()}
+                  <div className="text-lg font-bold text-red-600 mt-auto">
+                    ¥{(item.product.price || 0).toFixed(2)}
                   </div>
                 </CardContent>
-                <CardFooter className="p-4 pt-0 flex gap-2">
+                <CardFooter className="p-3 pt-0 mt-auto">
                   <Button
-                    className="flex-1"
+                    className="w-full"
                     size="sm"
-                    onClick={() => handleAddToCart(item.product.id)}
+                    onClick={() => handleAddToCart(item.product.productId)}
                   >
-                    <ShoppingCart className="h-4 w-4 mr-1" />
+                    <ShoppingCart className="h-3.5 w-3.5 mr-1" />
                     加入购物车
-                  </Button>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => handleRemove(item.product.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
                   </Button>
                 </CardFooter>
               </Card>

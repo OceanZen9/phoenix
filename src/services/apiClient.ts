@@ -75,8 +75,10 @@ const processQueue = (error: unknown, token: string | null = null) => {
 // --- 配置响应拦截器 ---
 // 它的任务是将所有后端返回的错误，标准化为 ApiError 格式
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => response, // 成功时直接返回完整的 response
-  async (error: AxiosError) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (response: AxiosResponse<any>) => response,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async (error: AxiosError<any>) => {
     const originalRequest = error.config;
     if (!originalRequest) {
       return Promise.reject(error);
@@ -122,9 +124,12 @@ apiClient.interceptors.response.use(
         // 使用原生 axios 发送刷新请求，避免循环引用和拦截器死循环
         // 注意：这里需要根据实际的 baseURL 拼接完整 URL
         const baseURL = apiClient.defaults.baseURL || "";
-        const refreshResponse = await axios.post(
+        const refreshResponse = await axios.post<{
+          accessToken: string;
+          refreshToken: string;
+        }>(
           `${baseURL}/api/v1/auth/refreshToken`,
-          { refreshToken } 
+          { refreshToken }
         );
 
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshResponse.data;

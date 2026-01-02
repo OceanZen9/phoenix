@@ -9,6 +9,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Link } from "react-router-dom";
+import { Toast } from "@/components/ui/toast";
 import {
   HoverCard,
   HoverCardContent,
@@ -17,10 +18,10 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth, useIsAuthenticated } from "@/stores/authStore";
-import { Search, ShoppingCart, Star, Home, TrendingUp, Heart } from "lucide-react";
+import { Search, ShoppingCart, Star, Home, TrendingUp, Heart, Package } from "lucide-react";
 import { LoginMascot } from "@/components/LoginMascot";
 import { useState, useEffect } from "react";
-import { getProductList, getCategories } from "@/services/product";
+import { getProductList, getCategories, getProductMainImage } from "@/services/product";
 import { addToCart, addToFavorites, removeFromFavorites, isFavorite } from "@/services/cart";
 import type { Product, Category } from "@/types/product";
 
@@ -30,10 +31,13 @@ function HomePage() {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [loading, setLoading] = useState(true);
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
+  const [toastMessage, setToastMessage] = useState("");
+  const [showToast, setShowToast] = useState(false);
+  const [productImages, setProductImages] = useState<Map<string, string>>(new Map());
 
   useEffect(() => {
     const loadData = async () => {
@@ -43,11 +47,21 @@ function HomePage() {
           getProductList(),
           getCategories()
         ]);
+
         setProducts(productsData);
         setCategories(categoriesData);
 
-        const favIds = new Set(productsData.filter(p => isFavorite(p.id)).map(p => p.id));
+        const favIds = new Set(productsData.filter(p => isFavorite(p.productId)).map(p => p.productId));
         setFavoriteIds(favIds);
+
+        const imageMap = new Map<string, string>();
+        for (const product of productsData) {
+          const mainImage = await getProductMainImage(product.productId);
+          if (mainImage) {
+            imageMap.set(product.productId, mainImage);
+          }
+        }
+        setProductImages(imageMap);
       } catch (error) {
         console.error('加载数据失败:', error);
       } finally {
@@ -59,34 +73,43 @@ function HomePage() {
 
   const handleAddToCart = (product: Product) => {
     addToCart(product, 1);
+    setToastMessage("已加入购物车");
+    setShowToast(true);
   };
 
   const handleToggleFavorite = (product: Product) => {
-    if (favoriteIds.has(product.id)) {
-      removeFromFavorites(product.id);
+    if (favoriteIds.has(product.productId)) {
+      removeFromFavorites(product.productId);
       setFavoriteIds(prev => {
         const newSet = new Set(prev);
-        newSet.delete(product.id);
+        newSet.delete(product.productId);
         return newSet;
       });
     } else {
       addToFavorites(product);
-      setFavoriteIds(prev => new Set(prev).add(product.id));
+      setFavoriteIds(prev => {
+        const newSet = new Set(prev);
+        newSet.add(product.productId);
+        return newSet;
+      });
+      setToastMessage("已加入收藏夹");
+      setShowToast(true);
     }
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory = !selectedCategory || product.category_id === selectedCategory;
+    const matchesCategory = !selectedCategory || parseInt(product.category) === selectedCategory;
     const matchesSearch = !searchKeyword ||
-      product.product_name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
-      product.product_desc.toLowerCase().includes(searchKeyword.toLowerCase());
+      product.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
+      (product.description && product.description.toLowerCase().includes(searchKeyword.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
 
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* 第一行：购物车 收藏夹 我的订单 登陆/注册 */}
-      <header className="container mx-auto flex items-center justify-end py-1 px-1 border-b">
+    <>
+      <div className="flex flex-col min-h-screen">
+        {/* Header and Nav sections remain the same... */}
+        <header className="container mx-auto flex items-center justify-end py-1 px-1 border-b">
         <div className="flex items-center gap-5">
           <Button variant="ghost" size="sm" className="p-1 h-7 w-7" asChild>
             <Link to="/cart">
@@ -98,6 +121,12 @@ function HomePage() {
             <Link to="/favorites">
               <Star className="h-3 w-3" />
               <span className="sr-only">收藏夹</span>
+            </Link>
+          </Button>
+          <Button variant="ghost" size="sm" className="px-2 h-7 text-xs" asChild>
+            <Link to="/orders">
+              <Package className="h-3 w-3 mr-1" />
+              我的订单
             </Link>
           </Button>
           {isAuthenticated && user ? (
@@ -190,9 +219,9 @@ function HomePage() {
           ))}
         </div>
       </nav>
-
-      <main className="container mx-auto py-8 px-4 flex-1">
-        {loading ? (
+        <main className="container mx-auto py-8 px-4 flex-1">
+          {/* Main content grid remains the same... */}
+          {loading ? (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {[...Array(8)].map((_, i) => (
               <Card key={i} className="animate-pulse">
@@ -214,13 +243,13 @@ function HomePage() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredProducts.map((product) => (
-              <Card key={product.id} className="group hover:shadow-lg transition-shadow">
+              <Card key={product.productId} className="group hover:shadow-lg transition-shadow flex flex-col h-full">
                 <CardHeader className="p-0">
                   <div className="aspect-square bg-muted rounded-t-lg overflow-hidden">
-                    {product.image_url ? (
+                    {productImages.get(product.productId) ? (
                       <img
-                        src={product.image_url}
-                        alt={product.product_name}
+                        src={productImages.get(product.productId)}
+                        alt={product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
                     ) : (
@@ -230,40 +259,47 @@ function HomePage() {
                     )}
                   </div>
                 </CardHeader>
-                <CardContent className="p-4">
-                  <CardTitle className="text-base line-clamp-2 mb-2">
-                    {product.product_name}
+                <CardContent className="p-3 flex-1 flex flex-col">
+                  <CardTitle className="text-sm line-clamp-2 mb-1 min-h-[2.5rem]">
+                    {product.name}
                   </CardTitle>
-                  <CardDescription className="text-sm line-clamp-2 mb-3">
-                    {product.product_desc}
+                  <CardDescription className="text-xs line-clamp-2 mb-2 min-h-[2rem]">
+                    {product.description}
                   </CardDescription>
-                  <div className="text-2xl font-bold text-red-600">
-                    ¥{product.product_price.toFixed(2)}
+                  <div className="text-lg font-bold text-red-600 mt-auto">
+                    ¥{(product.price || 0).toFixed(2)}
                   </div>
                 </CardContent>
-                <CardFooter className="p-4 pt-0 flex gap-2">
+                <CardFooter className="p-3 pt-0 flex gap-2 mt-auto">
                   <Button
                     className="flex-1"
                     size="sm"
                     onClick={() => handleAddToCart(product)}
                   >
-                    <ShoppingCart className="h-4 w-4 mr-1" />
+                    <ShoppingCart className="h-3.5 w-3.5 mr-1" />
                     加入购物车
                   </Button>
                   <Button
-                    variant={favoriteIds.has(product.id) ? "default" : "outline"}
+                    variant={favoriteIds.has(product.productId) ? "default" : "outline"}
                     size="sm"
                     onClick={() => handleToggleFavorite(product)}
                   >
-                    <Heart className={`h-4 w-4 ${favoriteIds.has(product.id) ? 'fill-current' : ''}`} />
+                    <Heart className={`h-3.5 w-3.5 ${favoriteIds.has(product.productId) ? 'fill-current' : ''}`} />
                   </Button>
                 </CardFooter>
               </Card>
             ))}
           </div>
         )}
-      </main>
-    </div>
+        </main>
+      </div>
+
+      <Toast
+        message={toastMessage}
+        show={showToast}
+        onClose={() => setShowToast(false)}
+      />
+    </>
   );
 }
 

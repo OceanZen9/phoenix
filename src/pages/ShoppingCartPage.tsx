@@ -2,16 +2,36 @@ import { useState, useEffect } from 'react';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { Toast } from '@/components/ui/toast';
 import { Trash2, Plus, Minus, ShoppingBag } from 'lucide-react';
-import { getCart, updateCartItemQuantity, removeFromCart, clearCart } from '@/services/cart';
+import { getCart, updateCartItemQuantity, removeFromCart, clearCart, orderProductInCart } from '@/services/cart';
+import { getProductMainImage } from '@/services/product';
 import type { CartItem } from '@/types/cart';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 function ShoppingCartPage() {
   const [cart, setCart] = useState<CartItem[]>([]);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
+  const [toastMessage, setToastMessage] = useState('');
+  const [showToast, setShowToast] = useState(false);
+  const [productImages, setProductImages] = useState<Map<string, string>>(new Map());
+  const navigate = useNavigate();
 
   useEffect(() => {
-    setCart(getCart());
+    const loadCart = async () => {
+      const cartData = getCart();
+      setCart(cartData);
+
+      const imageMap = new Map<string, string>();
+      for (const item of cartData) {
+        const mainImage = await getProductMainImage(item.product.productId);
+        if (mainImage) {
+          imageMap.set(item.product.productId, mainImage);
+        }
+      }
+      setProductImages(imageMap);
+    };
+    loadCart();
   }, []);
 
   const handleQuantityChange = (productId: string, newQuantity: number) => {
@@ -29,7 +49,27 @@ function ShoppingCartPage() {
     setCart([]);
   };
 
-  const totalPrice = cart.reduce((sum, item) => sum + item.product.product_price * item.quantity, 0);
+  const handleCheckout = async () => {
+    try {
+      setIsCheckingOut(true);
+      await orderProductInCart();
+      clearCart();
+      setCart([]);
+      setToastMessage('订单创建成功！');
+      setShowToast(true);
+      setTimeout(() => {
+        navigate('/orders');
+      }, 1000);
+    } catch (error) {
+      console.error('创建订单失败:', error);
+      setToastMessage('创建订单失败，请重试');
+      setShowToast(true);
+    } finally {
+      setIsCheckingOut(false);
+    }
+  };
+
+  const totalPrice = cart.reduce((sum, item) => sum + (item.product.price || 0) * item.quantity, 0);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -60,14 +100,14 @@ function ShoppingCartPage() {
           <div className="space-y-6">
             <div className="space-y-4">
               {cart.map((item) => (
-                <Card key={item.product.id}>
+                <Card key={item.product.productId}>
                   <CardContent className="p-6">
                     <div className="flex gap-4">
                       <div className="w-24 h-24 flex-shrink-0 bg-muted rounded-lg overflow-hidden">
-                        {item.product.image_url ? (
+                        {productImages.get(item.product.productId) ? (
                           <img
-                            src={item.product.image_url}
-                            alt={item.product.product_name}
+                            src={productImages.get(item.product.productId)}
+                            alt={item.product.name}
                             className="w-full h-full object-cover"
                           />
                         ) : (
@@ -78,28 +118,28 @@ function ShoppingCartPage() {
                       </div>
                       <div className="flex-1 flex flex-col justify-between">
                         <div>
-                          <h3 className="font-semibold text-lg mb-1">{item.product.product_name}</h3>
+                          <h3 className="font-semibold text-lg mb-1">{item.product.name}</h3>
                           <p className="text-sm text-muted-foreground line-clamp-2">
-                            {item.product.product_desc}
+                            {item.product.description}
                           </p>
                         </div>
                         <div className="flex items-center justify-between mt-2">
                           <div className="text-xl font-bold text-red-600">
-                            ¥{item.product.product_price.toFixed(2)}
+                            ¥{(item.product.price || 0).toFixed(2)}
                           </div>
                           <div className="flex items-center gap-2">
                             <Button
                               variant="outline"
                               size="icon"
                               className="h-8 w-8"
-                              onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
+                              onClick={() => handleQuantityChange(item.product.productId, item.quantity - 1)}
                             >
                               <Minus className="h-4 w-4" />
                             </Button>
                             <Input
                               type="number"
                               value={item.quantity}
-                              onChange={(e) => handleQuantityChange(item.product.id, parseInt(e.target.value) || 1)}
+                              onChange={(e) => handleQuantityChange(item.product.productId, parseInt(e.target.value) || 1)}
                               className="w-16 h-8 text-center"
                               min="1"
                             />
@@ -107,7 +147,7 @@ function ShoppingCartPage() {
                               variant="outline"
                               size="icon"
                               className="h-8 w-8"
-                              onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
+                              onClick={() => handleQuantityChange(item.product.productId, item.quantity + 1)}
                             >
                               <Plus className="h-4 w-4" />
                             </Button>
@@ -115,7 +155,7 @@ function ShoppingCartPage() {
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8 ml-2 text-red-600 hover:text-red-700"
-                              onClick={() => handleRemove(item.product.id)}
+                              onClick={() => handleRemove(item.product.productId)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>
@@ -143,14 +183,25 @@ function ShoppingCartPage() {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button className="w-full" size="lg">
-                  去结算
+                <Button
+                  className="w-full"
+                  size="lg"
+                  onClick={handleCheckout}
+                  disabled={isCheckingOut}
+                >
+                  {isCheckingOut ? '处理中...' : '去结算'}
                 </Button>
               </CardFooter>
             </Card>
           </div>
         )}
       </div>
+
+      <Toast
+        message={toastMessage}
+        show={showToast}
+        onClose={() => setShowToast(false)}
+      />
     </div>
   );
 }
