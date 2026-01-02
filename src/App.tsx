@@ -7,6 +7,7 @@ import AuthPage from "@/pages/AuthPage";
 import UserPage from "@/pages/UserPage";
 import SettingsPage from "@/pages/SettingsPage";
 import OrdersPage from "@/pages/OrdersPage";
+import AddressPage from "@/pages/AddressPage";
 import { ProtectedRoute } from "@/components/feature/common/ProtectedRoute";
 import { PublicRoute } from "@/components/feature/common/PublicRoute";
 
@@ -62,6 +63,14 @@ function App() {
         element={
           <ProtectedRoute>
             <OrdersPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/address"
+        element={
+          <ProtectedRoute>
+            <AddressPage />
           </ProtectedRoute>
         }
       />

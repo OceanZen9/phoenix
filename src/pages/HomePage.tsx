@@ -150,6 +150,9 @@ function HomePage() {
                 <Link to="/user" className="block w-full text-left px-2 py-1.5 text-sm rounded-sm hover:bg-accent">
                   个人空间
                 </Link>
+                <Link to="/address" className="block w-full text-left px-2 py-1.5 text-sm rounded-sm hover:bg-accent">
+                    我的地址
+                </Link>
                 <Link to="/setting" className="block w-full text-left px-2 py-1.5 text-sm rounded-sm hover:bg-accent">
                   设置
                 </Link>
