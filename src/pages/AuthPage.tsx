@@ -53,7 +53,7 @@ export default function AuthPage() {
         username: registerUsername,
         email: registerEmail,
         password: registerPassword,
-        code: registerCode, // This should be from user input
+        verificationCode: registerCode, // This should be from user input
       });
       console.log("Registration API call successful");
       // On successful registration, switch to login tab and pre-fill email

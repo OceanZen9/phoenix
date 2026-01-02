@@ -87,7 +87,7 @@ describe('auth service', () => {
         username: 'newuser',
         email: 'new@example.com',
         password: 'newpassword123',
-        code: '123456',
+        verificationCode: '123456',
       };
       const result = await register(payload);
 
@@ -103,7 +103,7 @@ describe('auth service', () => {
         username: 'existinguser',
         email: 'test@example.com',
         password: 'password123',
-        code: '123456',
+        verificationCode: '123456',
       };
 
       await expect(register(payload)).rejects.toEqual(mockError);

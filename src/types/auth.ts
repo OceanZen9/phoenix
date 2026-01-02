@@ -30,7 +30,7 @@ export interface RegisterPayload {
   username: string;
   email: string;
   password: string;
-  code: string;
+  verificationCode: string;
 }
 
 // --- 刷新Token (RefreshToken) ---
