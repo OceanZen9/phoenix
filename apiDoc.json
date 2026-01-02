@@ -675,7 +675,7 @@
             "in": "header",
             "description": "用于用户身份认证的令牌。格式为 `Bearer <token>`，其中 `<token>` 是从登录或注册接口返回的 `accessToken`。所有受保护的接口都必须携带此请求头。",
             "required": true,
-            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzY3MjczMTM5LCJleHAiOjE3NjcyNzQwMzl9.t_71lcuHkkmf3t-z1Vei9xAjY-o-yXw5ncn88XmBs0c",
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJ0ZXN0MSIsImlhdCI6MTc2NzM2NjAzMywiZXhwIjoxNzY3MzY2OTMzfQ.-QuIg3WQBaHDGR5l_7ecllQcWpW7nwY_2lJ1nKztdQg",
             "schema": {
               "type": "string"
             }
@@ -687,7 +687,47 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/UserProfile"
+                  "type": "object",
+                  "properties": {
+                    "username": {
+                      "type": "string"
+                    },
+                    "password": {
+                      "type": "string"
+                    },
+                    "email": {
+                      "type": "string"
+                    },
+                    "phone": {
+                      "type": "null"
+                    },
+                    "role": {
+                      "type": "string"
+                    },
+                    "avatar": {
+                      "type": "string"
+                    },
+                    "nickname": {
+                      "type": "null"
+                    }
+                  },
+                  "required": [
+                    "username",
+                    "password",
+                    "email",
+                    "phone",
+                    "role",
+                    "avatar",
+                    "nickname"
+                  ]
+                },
+                "example": {
+                  "username": "test1",
+                  "password": "$2a$10$TwZLnLvcgnRyvrdyt5P3jeayZQLl05alpLSuYcm7Wir/RHD.Hxedu",
+                  "email": "2840719908@qq.com",
+                  "phone": null,
+                  "avatar": "https://picsum.photos/seed/9WhLT8GS/1007/1111",
+                  "nickname": null
                 }
               }
             },
@@ -727,7 +767,7 @@
             "in": "header",
             "description": "用于用户身份认证的令牌。格式为 `Bearer <token>`，其中 `<token>` 是从登录或注册接口返回的 `accessToken`。所有受保护的接口都必须携带此请求头。",
             "required": true,
-            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzY3MjczMTM5LCJleHAiOjE3NjcyNzQwMzl9.t_71lcuHkkmf3t-z1Vei9xAjY-o-yXw5ncn88XmBs0c",
+            "example": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzY29wZSI6InJlYWQgd3JpdGUgcHJvZmlsZSIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJzdWIiOiJ0ZXN0IiwiaWF0IjoxNzY3MzMxNjEyLCJleHAiOjE3NjczMzI1MTJ9.wVqrl6HFp6MU7wD1d-UUIGoTw7K99Cr6n9KCN76nxTA",
             "schema": {
               "type": "string"
             }
@@ -753,11 +793,20 @@
                     "type": "string",
                     "title": "头像",
                     "description": "若没有，则返回null"
+                  },
+                  "nickname": {
+                    "type": "string"
+                  },
+                  "phone": {
+                    "type": "string"
                   }
-                }
+                },
+                "required": [
+                  "phone"
+                ]
               },
               "example": {
-                "username": "test",
+                "username": "test1",
                 "email": "2840719908@qq.com",
                 "avatar": "https://picsum.photos/seed/9WhLT8GS/1007/1111"
               }
@@ -3364,26 +3413,6 @@
           "role"
         ]
       },
-      "UpdateProfilePayload": {
-        "type": "object",
-        "properties": {
-          "username": {
-            "type": "string",
-            "title": "用户名",
-            "description": "若无，则提交null"
-          },
-          "email": {
-            "type": "string",
-            "title": "邮箱",
-            "description": "若无，则提交null"
-          },
-          "avatar": {
-            "type": "string",
-            "title": "头像",
-            "description": "若无，则提交null"
-          }
-        }
-      },
       "ChangePasswordPayload": {
         "type": "object",
         "properties": {
@@ -3420,28 +3449,6 @@
         "required": [
           "email",
           "password",
-          "loginType"
-        ]
-      },
-      "EmailCodeLoginPayload": {
-        "type": "object",
-        "properties": {
-          "loginType": {
-            "type": "string",
-            "title": "登录方式"
-          },
-          "email": {
-            "type": "string",
-            "title": "邮箱"
-          },
-          "code": {
-            "type": "string",
-            "title": "验证码"
-          }
-        },
-        "required": [
-          "email",
-          "code",
           "loginType"
         ]
       },
@@ -3695,28 +3702,6 @@
           "userId",
           "isPaid",
           "isDelivered"
-        ]
-      },
-      "ApiArror": {
-        "type": "object",
-        "properties": {
-          "message": {
-            "type": "string",
-            "title": "错误消息"
-          },
-          "code": {
-            "type": "string",
-            "title": "机器码"
-          },
-          "status": {
-            "type": "string",
-            "title": "错误码"
-          }
-        },
-        "required": [
-          "message",
-          "code",
-          "status"
         ]
       }
     },

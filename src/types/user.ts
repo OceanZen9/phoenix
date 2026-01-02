@@ -11,8 +11,10 @@ export interface UserProfile {
   userId?: string;
   role?: string;
   username?: string;
+  nickname?: string | null;
   avatar?: string | null;
   email: string;
+  phone?: string | null;
   address?: string | null;
   createdAt?: string;
   updatedAt?: string;
@@ -22,8 +24,8 @@ export interface UserProfile {
  * @description 更新用户个人资料时提交的数据体 (Payload)
  */
 export interface UpdateProfilePayload {
-  username?: string;
-  email?: string;
+  nickname?: string;
+  phone?: string;
   avatar?: string;
 }
 
