@@ -61,13 +61,18 @@ apiClient.interceptors.response.use(
       return Promise.reject(error);
     }
 
+    // 扩展 InternalAxiosRequestConfig 以包含 _retry 属性
+    interface RetryRequestConfig extends InternalAxiosRequestConfig {
+      _retry?: boolean;
+    }
+
     // 如果是 401 错误，且未重试过
     if (
       error.response?.status === 401 &&
       !originalRequest.url?.includes("/auth/refreshToken") &&
-      !(originalRequest as any)._retry
+      !(originalRequest as RetryRequestConfig)._retry
     ) {
-      (originalRequest as any)._retry = true;
+      (originalRequest as RetryRequestConfig)._retry = true;
 
       try {
         const { refreshToken } = useAuth.getState();
