@@ -84,9 +84,12 @@ apiClient.interceptors.response.use(
         // 使用原生 axios 发送刷新请求，避免循环引用和拦截器死循环
         // 注意：这里需要根据实际的 baseURL 拼接完整 URL
         const baseURL = apiClient.defaults.baseURL || "";
-        const refreshResponse = await axios.post(
+        const refreshResponse = await axios.post<{
+          accessToken: string;
+          refreshToken: string;
+        }>(
           `${baseURL}/api/v1/auth/refreshToken`,
-          { refreshToken } 
+          { refreshToken }
         );
 
         const { accessToken: newAccessToken, refreshToken: newRefreshToken } = refreshResponse.data;

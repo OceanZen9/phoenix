@@ -100,7 +100,7 @@ export const clearServerCart = async (): Promise<void> => {
 export const syncCartToServer = async (): Promise<void> => {
   try {
     await clearServerCart();
-  } catch (error) {
+  } catch (_error) {
     console.log('清空服务器购物车失败，可能购物车本来就是空的');
   }
 

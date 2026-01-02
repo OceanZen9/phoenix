@@ -50,7 +50,7 @@ export const getProductMainImage = async (productId: string | number): Promise<s
     const images = await getProductImages(productId);
     const mainImage = images.find(img => img.isMain);
     return mainImage?.imageUrl || images[0]?.imageUrl || null;
-  } catch (err) {
+  } catch {
     return null;
   }
 };
