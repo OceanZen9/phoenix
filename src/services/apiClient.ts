@@ -54,8 +54,10 @@ apiClient.interceptors.request.use(
 // --- 配置响应拦截器 ---
 // 它的任务是将所有后端返回的错误，标准化为 ApiError 格式
 apiClient.interceptors.response.use(
-  (response: AxiosResponse) => response, // 成功时直接返回完整的 response
-  async (error: AxiosError) => {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  (response: AxiosResponse<any>) => response,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  async (error: AxiosError<any>) => {
     const originalRequest = error.config;
     if (!originalRequest) {
       return Promise.reject(error);
