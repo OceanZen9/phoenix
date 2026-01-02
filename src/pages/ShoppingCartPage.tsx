@@ -29,7 +29,7 @@ function ShoppingCartPage() {
     setCart([]);
   };
 
-  const totalPrice = cart.reduce((sum, item) => sum + item.product.product_price * item.quantity, 0);
+  const totalPrice = cart.reduce((sum, item) => sum + (item.product.price || 0) * item.quantity, 0);
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -60,14 +60,14 @@ function ShoppingCartPage() {
           <div className="space-y-6">
             <div className="space-y-4">
               {cart.map((item) => (
-                <Card key={item.product.id}>
+                <Card key={item.product.productId}>
                   <CardContent className="p-6">
                     <div className="flex gap-4">
                       <div className="w-24 h-24 flex-shrink-0 bg-muted rounded-lg overflow-hidden">
-                        {item.product.image_url ? (
+                        {item.product.imageUrl ? (
                           <img
-                            src={item.product.image_url}
-                            alt={item.product.product_name}
+                            src={item.product.imageUrl}
+                            alt={item.product.name}
                             className="w-full h-full object-cover"
                           />
                         ) : (
@@ -78,28 +78,28 @@ function ShoppingCartPage() {
                       </div>
                       <div className="flex-1 flex flex-col justify-between">
                         <div>
-                          <h3 className="font-semibold text-lg mb-1">{item.product.product_name}</h3>
+                          <h3 className="font-semibold text-lg mb-1">{item.product.name}</h3>
                           <p className="text-sm text-muted-foreground line-clamp-2">
-                            {item.product.product_desc}
+                            {item.product.description}
                           </p>
                         </div>
                         <div className="flex items-center justify-between mt-2">
                           <div className="text-xl font-bold text-red-600">
-                            ¥{item.product.product_price.toFixed(2)}
+                            ¥{(item.product.price || 0).toFixed(2)}
                           </div>
                           <div className="flex items-center gap-2">
                             <Button
                               variant="outline"
                               size="icon"
                               className="h-8 w-8"
-                              onClick={() => handleQuantityChange(item.product.id, item.quantity - 1)}
+                              onClick={() => handleQuantityChange(item.product.productId, item.quantity - 1)}
                             >
                               <Minus className="h-4 w-4" />
                             </Button>
                             <Input
                               type="number"
                               value={item.quantity}
-                              onChange={(e) => handleQuantityChange(item.product.id, parseInt(e.target.value) || 1)}
+                              onChange={(e) => handleQuantityChange(item.product.productId, parseInt(e.target.value) || 1)}
                               className="w-16 h-8 text-center"
                               min="1"
                             />
@@ -107,7 +107,7 @@ function ShoppingCartPage() {
                               variant="outline"
                               size="icon"
                               className="h-8 w-8"
-                              onClick={() => handleQuantityChange(item.product.id, item.quantity + 1)}
+                              onClick={() => handleQuantityChange(item.product.productId, item.quantity + 1)}
                             >
                               <Plus className="h-4 w-4" />
                             </Button>
@@ -115,7 +115,7 @@ function ShoppingCartPage() {
                               variant="ghost"
                               size="icon"
                               className="h-8 w-8 ml-2 text-red-600 hover:text-red-700"
-                              onClick={() => handleRemove(item.product.id)}
+                              onClick={() => handleRemove(item.product.productId)}
                             >
                               <Trash2 className="h-4 w-4" />
                             </Button>

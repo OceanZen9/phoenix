@@ -20,7 +20,7 @@ function FavoritesPage() {
   };
 
   const handleAddToCart = (productId: string) => {
-    const product = favorites.find(item => item.product.id === productId)?.product;
+    const product = favorites.find(item => item.product.productId === productId)?.product;
     if (product) {
       addToCart(product, 1);
     }
@@ -52,13 +52,13 @@ function FavoritesPage() {
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {favorites.map((item) => (
-              <Card key={item.product.id} className="group hover:shadow-lg transition-shadow">
+              <Card key={item.product.productId} className="group hover:shadow-lg transition-shadow">
                 <CardHeader className="p-0">
                   <div className="aspect-square bg-muted rounded-t-lg overflow-hidden relative">
-                    {item.product.image_url ? (
+                    {item.product.imageUrl ? (
                       <img
-                        src={item.product.image_url}
-                        alt={item.product.product_name}
+                        src={item.product.imageUrl}
+                        alt={item.product.name}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform"
                       />
                     ) : (
@@ -70,7 +70,7 @@ function FavoritesPage() {
                       variant="ghost"
                       size="icon"
                       className="absolute top-2 right-2 bg-white/80 hover:bg-white text-red-600"
-                      onClick={() => handleRemove(item.product.id)}
+                      onClick={() => handleRemove(item.product.productId)}
                     >
                       <Heart className="h-5 w-5 fill-current" />
                     </Button>
@@ -78,13 +78,13 @@ function FavoritesPage() {
                 </CardHeader>
                 <CardContent className="p-4">
                   <CardTitle className="text-base line-clamp-2 mb-2">
-                    {item.product.product_name}
+                    {item.product.name}
                   </CardTitle>
                   <CardDescription className="text-sm line-clamp-2 mb-3">
-                    {item.product.product_desc}
+                    {item.product.description}
                   </CardDescription>
                   <div className="text-2xl font-bold text-red-600">
-                    ¥{item.product.product_price.toFixed(2)}
+                    ¥{(item.product.price || 0).toFixed(2)}
                   </div>
                   <div className="text-xs text-muted-foreground mt-2">
                     收藏于 {new Date(item.addedAt).toLocaleDateString()}
@@ -94,7 +94,7 @@ function FavoritesPage() {
                   <Button
                     className="flex-1"
                     size="sm"
-                    onClick={() => handleAddToCart(item.product.id)}
+                    onClick={() => handleAddToCart(item.product.productId)}
                   >
                     <ShoppingCart className="h-4 w-4 mr-1" />
                     加入购物车
@@ -102,7 +102,7 @@ function FavoritesPage() {
                   <Button
                     variant="outline"
                     size="sm"
-                    onClick={() => handleRemove(item.product.id)}
+                    onClick={() => handleRemove(item.product.productId)}
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>

@@ -11,7 +11,7 @@ export const getCart = (): CartItem[] => {
 
 export const addToCart = (product: Product, quantity: number = 1): CartItem[] => {
   const cart = getCart();
-  const existingItem = cart.find(item => item.product.id === product.id);
+  const existingItem = cart.find(item => item.product.productId === product.productId);
 
   if (existingItem) {
     existingItem.quantity += quantity;
@@ -25,7 +25,7 @@ export const addToCart = (product: Product, quantity: number = 1): CartItem[] =>
 
 export const updateCartItemQuantity = (productId: string, quantity: number): CartItem[] => {
   const cart = getCart();
-  const item = cart.find(item => item.product.id === productId);
+  const item = cart.find(item => item.product.productId === productId);
 
   if (item) {
     item.quantity = quantity;
@@ -39,7 +39,7 @@ export const updateCartItemQuantity = (productId: string, quantity: number): Car
 };
 
 export const removeFromCart = (productId: string): CartItem[] => {
-  const cart = getCart().filter(item => item.product.id !== productId);
+  const cart = getCart().filter(item => item.product.productId !== productId);
   localStorage.setItem(CART_KEY, JSON.stringify(cart));
   return cart;
 };
@@ -55,7 +55,7 @@ export const getFavorites = (): FavoriteItem[] => {
 
 export const addToFavorites = (product: Product): FavoriteItem[] => {
   const favorites = getFavorites();
-  const exists = favorites.find(item => item.product.id === product.id);
+  const exists = favorites.find(item => item.product.productId === product.productId);
 
   if (!exists) {
     favorites.push({ product, addedAt: new Date().toISOString() });
@@ -66,12 +66,12 @@ export const addToFavorites = (product: Product): FavoriteItem[] => {
 };
 
 export const removeFromFavorites = (productId: string): FavoriteItem[] => {
-  const favorites = getFavorites().filter(item => item.product.id !== productId);
+  const favorites = getFavorites().filter(item => item.product.productId !== productId);
   localStorage.setItem(FAVORITES_KEY, JSON.stringify(favorites));
   return favorites;
 };
 
 export const isFavorite = (productId: string): boolean => {
   const favorites = getFavorites();
-  return favorites.some(item => item.product.id === productId);
+  return favorites.some(item => item.product.productId === productId);
 };
