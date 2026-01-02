@@ -51,6 +51,10 @@ function HomePage() {
         setProducts(productsData);
         setCategories(categoriesData);
 
+        console.log('商品数据示例:', productsData.slice(0, 2));
+        console.log('分类数据:', categoriesData);
+        console.log('商品分类字段示例:', productsData.slice(0, 5).map(p => ({ id: p.productId, category: p.category, categoryType: typeof p.category })));
+
         const favIds = new Set(productsData.filter(p => isFavorite(p.productId)).map(p => p.productId));
         setFavoriteIds(favIds);
 
@@ -98,7 +102,9 @@ function HomePage() {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory = !selectedCategory || parseInt(product.category) === selectedCategory;
+    const matchesCategory = !selectedCategory ||
+      parseInt(product.category) === selectedCategory ||
+      product.category === String(selectedCategory);
     const matchesSearch = !searchKeyword ||
       product.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
       (product.description && product.description.toLowerCase().includes(searchKeyword.toLowerCase()));
@@ -247,32 +253,34 @@ function HomePage() {
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {filteredProducts.map((product) => (
               <Card key={product.productId} className="group hover:shadow-lg transition-shadow flex flex-col h-full">
-                <CardHeader className="p-0">
-                  <div className="aspect-square bg-muted rounded-t-lg overflow-hidden">
-                    {productImages.get(product.productId) ? (
-                      <img
-                        src={productImages.get(product.productId)}
-                        alt={product.name}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform"
-                      />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
-                        <span className="text-4xl text-slate-400">📦</span>
-                      </div>
-                    )}
-                  </div>
-                </CardHeader>
-                <CardContent className="p-3 flex-1 flex flex-col">
-                  <CardTitle className="text-sm line-clamp-2 mb-1 min-h-[2.5rem]">
-                    {product.name}
-                  </CardTitle>
-                  <CardDescription className="text-xs line-clamp-2 mb-2 min-h-[2rem]">
-                    {product.description}
-                  </CardDescription>
-                  <div className="text-lg font-bold text-red-600 mt-auto">
-                    ¥{(product.price || 0).toFixed(2)}
-                  </div>
-                </CardContent>
+                <Link to={`/product/${product.productId}`} className="flex-1 flex flex-col">
+                  <CardHeader className="p-0">
+                    <div className="aspect-square bg-muted rounded-t-lg overflow-hidden">
+                      {productImages.get(product.productId) ? (
+                        <img
+                          src={productImages.get(product.productId)}
+                          alt={product.name}
+                          className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-slate-100 to-slate-200">
+                          <span className="text-4xl text-slate-400">📦</span>
+                        </div>
+                      )}
+                    </div>
+                  </CardHeader>
+                  <CardContent className="p-3 flex-1 flex flex-col">
+                    <CardTitle className="text-sm line-clamp-2 mb-1 min-h-[2.5rem]">
+                      {product.name}
+                    </CardTitle>
+                    <CardDescription className="text-xs line-clamp-2 mb-2 min-h-[2rem]">
+                      {product.description}
+                    </CardDescription>
+                    <div className="text-lg font-bold text-red-600 mt-auto">
+                      ¥{(product.price || 0).toFixed(2)}
+                    </div>
+                  </CardContent>
+                </Link>
                 <CardFooter className="p-3 pt-0 flex gap-2 mt-auto">
                   <Button
                     className="flex-1"
