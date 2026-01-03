@@ -11,10 +11,14 @@ export interface Product {
   productId: string;
   name: string;
   price: number;
+  originalPrice: number;
   description: string;
   category: string;
   imageUrl: string;
   stock: number;
+  soldQuantity: number;
+  isFeatured: boolean;
+  status: string;
   createdAt: string;
   updatedAt: string;
 }
