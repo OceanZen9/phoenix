@@ -31,13 +31,15 @@ function HomePage() {
 
   const [products, setProducts] = useState<Product[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [loading, setLoading] = useState(true);
   const [favoriteIds, setFavoriteIds] = useState<Set<string>>(new Set());
   const [toastMessage, setToastMessage] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [productImages, setProductImages] = useState<Map<string, string>>(new Map());
+  const [showRecommended, setShowRecommended] = useState(false);
+  const [productSales, setProductSales] = useState<Map<string, number>>(new Map());
 
   useEffect(() => {
     const loadData = async () => {
@@ -54,6 +56,13 @@ function HomePage() {
         console.log('商品数据示例:', productsData.slice(0, 2));
         console.log('分类数据:', categoriesData);
         console.log('商品分类字段示例:', productsData.slice(0, 5).map(p => ({ id: p.productId, category: p.category, categoryType: typeof p.category })));
+
+        const salesMap = new Map<string, number>();
+        productsData.forEach(product => {
+          const randomSales = Math.floor(Math.random() * 500000) + 100;
+          salesMap.set(product.productId, randomSales);
+        });
+        setProductSales(salesMap);
 
         const favIds = new Set(productsData.filter(p => isFavorite(p.productId)).map(p => p.productId));
         setFavoriteIds(favIds);
@@ -74,6 +83,17 @@ function HomePage() {
     };
     loadData();
   }, []);
+
+  const formatSales = (sales: number): string => {
+    if (sales >= 100000) {
+      return `${Math.floor(sales / 10000)}w+`;
+    } else if (sales >= 10000) {
+      return `${(sales / 10000).toFixed(1)}w+`;
+    } else if (sales >= 1000) {
+      return `${(sales / 1000).toFixed(1)}k+`;
+    }
+    return `${sales}+`;
+  };
 
   const handleAddToCart = (product: Product) => {
     addToCart(product, 1);
@@ -102,14 +122,19 @@ function HomePage() {
   };
 
   const filteredProducts = products.filter((product) => {
-    const matchesCategory = !selectedCategory ||
-      parseInt(product.category) === selectedCategory ||
-      product.category === String(selectedCategory);
+    if (showRecommended) return true;
+    const matchesCategory = !selectedCategory || product.category === selectedCategory;
     const matchesSearch = !searchKeyword ||
       product.name.toLowerCase().includes(searchKeyword.toLowerCase()) ||
       (product.description && product.description.toLowerCase().includes(searchKeyword.toLowerCase()));
     return matchesCategory && matchesSearch;
   });
+
+  const displayProducts = showRecommended
+    ? [...filteredProducts]
+        .sort((a, b) => (productSales.get(b.productId) || 0) - (productSales.get(a.productId) || 0))
+        .slice(0, 50)
+    : filteredProducts;
 
   return (
     <>
@@ -199,17 +224,24 @@ function HomePage() {
       <nav className="container mx-auto border-b">
         <div className="flex items-center gap-1 px-4 overflow-x-auto">
           <Button
-            variant={selectedCategory === null ? "default" : "ghost"}
+            variant={selectedCategory === null && !showRecommended ? "default" : "ghost"}
             size="sm"
-            onClick={() => setSelectedCategory(null)}
+            onClick={() => {
+              setSelectedCategory(null);
+              setShowRecommended(false);
+            }}
             className="flex items-center gap-2 whitespace-nowrap"
           >
             <Home className="h-4 w-4" />
             首页
           </Button>
           <Button
-            variant="ghost"
+            variant={showRecommended ? "default" : "ghost"}
             size="sm"
+            onClick={() => {
+              setShowRecommended(true);
+              setSelectedCategory(null);
+            }}
             className="flex items-center gap-2 whitespace-nowrap"
           >
             <TrendingUp className="h-4 w-4" />
@@ -218,9 +250,12 @@ function HomePage() {
           {categories.map((category) => (
             <Button
               key={category.id}
-              variant={selectedCategory === category.id ? "default" : "ghost"}
+              variant={selectedCategory === category.name ? "default" : "ghost"}
               size="sm"
-              onClick={() => setSelectedCategory(category.id)}
+              onClick={() => {
+                setSelectedCategory(category.name);
+                setShowRecommended(false);
+              }}
               className="whitespace-nowrap"
             >
               {category.name}
@@ -244,14 +279,14 @@ function HomePage() {
               </Card>
             ))}
           </div>
-        ) : filteredProducts.length === 0 ? (
+        ) : displayProducts.length === 0 ? (
           <div className="text-center py-16 text-muted-foreground">
             <p className="text-lg">暂无商品</p>
             {searchKeyword && <p className="text-sm mt-2">尝试搜索其他关键词</p>}
           </div>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {filteredProducts.map((product) => (
+            {displayProducts.map((product) => (
               <Card key={product.productId} className="group hover:shadow-lg transition-shadow flex flex-col h-full">
                 <Link to={`/product/${product.productId}`} className="flex-1 flex flex-col">
                   <CardHeader className="p-0">
@@ -276,8 +311,15 @@ function HomePage() {
                     <CardDescription className="text-xs line-clamp-2 mb-2 min-h-[2rem]">
                       {product.description}
                     </CardDescription>
-                    <div className="text-lg font-bold text-red-600 mt-auto">
-                      ¥{(product.price || 0).toFixed(2)}
+                    <div className="mt-auto">
+                      <div className="text-lg font-bold text-red-600">
+                        ¥{(product.price || 0).toFixed(2)}
+                      </div>
+                      {showRecommended && (
+                        <div className="text-xs text-muted-foreground mt-1">
+                          {formatSales(productSales.get(product.productId) || 0)} 已售
+                        </div>
+                      )}
                     </div>
                   </CardContent>
                 </Link>
