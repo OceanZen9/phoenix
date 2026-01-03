@@ -70,6 +70,8 @@ function ShoppingCartPage() {
   };
 
   const totalPrice = cart.reduce((sum, item) => sum + (item.product.price || 0) * item.quantity, 0);
+  const totalOriginalPrice = cart.reduce((sum, item) => sum + (item.product.originalPrice || item.product.price || 0) * item.quantity, 0);
+  const totalSaved = totalOriginalPrice - totalPrice;
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -179,7 +181,14 @@ function ShoppingCartPage() {
                 </div>
                 <div className="flex justify-between text-lg font-bold">
                   <span>总计</span>
-                  <span className="text-red-600">¥{totalPrice.toFixed(2)}</span>
+                  <div className="flex items-center gap-2">
+                    <span className="text-red-600">¥{totalPrice.toFixed(2)}</span>
+                    {totalSaved > 0 && (
+                      <span className="text-sm font-normal text-green-600">
+                        -¥{totalSaved.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
                 </div>
               </CardContent>
               <CardFooter>
