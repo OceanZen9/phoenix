@@ -14,6 +14,7 @@ interface AuthActions {
   logout: () => void;
   login: (payload: LoginPayload) => Promise<void>;
   register: (payload: RegisterPayload) => Promise<void>;
+  updateUser: (user: UserProfile) => void;
 }
 
 const useAuthStore = create<AuthState & AuthActions>()(
@@ -41,7 +42,9 @@ const useAuthStore = create<AuthState & AuthActions>()(
       },
       register: async (payload) => {
         await registerService(payload);
-        // Register does not log the user in
+      },
+      updateUser: (user) => {
+        set({ user });
       },
     }),
     {

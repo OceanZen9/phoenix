@@ -45,6 +45,11 @@ function HomePage() {
     const loadData = async () => {
       try {
         setLoading(true);
+        console.log('[DEBUG] 当前用户信息:', user);
+        console.log('[DEBUG] user.avatar:', user?.avatar);
+        console.log('[DEBUG] user.nickname:', user?.nickname);
+        console.log('[DEBUG] user.username:', user?.username);
+
         const [productsData, categoriesData] = await Promise.all([
           getProductList(),
           getCategories()
@@ -165,14 +170,14 @@ function HomePage() {
               <HoverCardTrigger asChild>
                 <Link to="/user">
                   <Avatar className="h-8 w-8">
-                    <AvatarImage src={user.avatar || ''} alt={user.username || 'User'} />
-                    <AvatarFallback>{(user.username || user.email || 'U').charAt(0).toUpperCase()}</AvatarFallback>
+                    <AvatarImage src={user.avatar || undefined} alt={user.nickname || user.username || 'User'} />
+                    <AvatarFallback>{(user.nickname || user.username || user.email || 'U').charAt(0).toUpperCase()}</AvatarFallback>
                   </Avatar>
                 </Link>
               </HoverCardTrigger>
               <HoverCardContent className="w-56" align="end">
                  <div className="flex flex-col space-y-1 mb-2">
-                    <p className="text-sm font-medium leading-none">{user.username || '用户'}</p>
+                    <p className="text-sm font-medium leading-none">{user.nickname || user.username || '用户'}</p>
                     <p className="text-xs leading-none text-muted-foreground">
                       {user.email}
                     </p>

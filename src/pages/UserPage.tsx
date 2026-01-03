@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { useAuth } from '@/stores/authStore';
 import { getUserProfile, updateUserProfile } from '@/services/user';
@@ -12,9 +12,11 @@ import {
 } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Upload } from 'lucide-react';
 
 const UserPage: React.FC = () => {
-  const { logout } = useAuth();
+  const authStore = useAuth();
+  const { logout, updateUser } = authStore;
   const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
   const [formData, setFormData] = useState<UpdateProfilePayload>({});
   const [loading, setLoading] = useState(true);
@@ -24,6 +26,8 @@ const UserPage: React.FC = () => {
     null
   );
   const [isEditMode, setIsEditMode] = useState(false);
+  const [avatarPreview, setAvatarPreview] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const fetchUserProfile = async () => {
@@ -36,6 +40,9 @@ const UserPage: React.FC = () => {
           phone: profile.phone || '',
           avatar: profile.avatar || '',
         });
+
+        updateUser(profile);
+        console.log("Synced authStore with complete profile on mount");
       } catch (err) {
         setError('获取用户信息失败，请稍后再试。');
         console.error(err);
@@ -52,23 +59,63 @@ const UserPage: React.FC = () => {
     setFormData((prev) => ({ ...prev, [id]: value }));
   };
 
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      setUpdateStatus('error');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      const img = new Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        if (!ctx) return;
+
+        canvas.width = 280;
+        canvas.height = 280;
+
+        const size = Math.min(img.width, img.height);
+        const x = (img.width - size) / 2;
+        const y = (img.height - size) / 2;
+
+        ctx.drawImage(img, x, y, size, size, 0, 0, 280, 280);
+
+        const base64 = canvas.toDataURL('image/jpeg', 0.9);
+
+        setAvatarPreview(base64);
+        setFormData((prev) => ({ ...prev, avatar: base64 }));
+      };
+      img.src = event.target?.result as string;
+    };
+    reader.readAsDataURL(file);
+  };
+
   const handleUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("=== handleUpdate triggered ==="); // DEBUG
-    console.log("FormData being submitted:", formData); // DEBUG
+    console.log("=== handleUpdate triggered ===");
+    console.log("FormData being submitted:", formData);
     setIsUpdating(true);
     setUpdateStatus(null);
     try {
-      console.log("Sending PATCH request to /api/v1/users/profile..."); // DEBUG
+      console.log("Sending PATCH request to /api/v1/users/profile...");
       await updateUserProfile(formData);
-      console.log("PATCH request successful. Refetching profile..."); // DEBUG
-      
-      // 重新获取用户信息以确保数据显示最新
+      console.log("PATCH request successful. Refetching profile...");
+
       const profile = await getUserProfile();
-      console.log("Refetched profile:", profile); // DEBUG
+      console.log("Refetched profile:", profile);
       setUserProfile(profile);
+
+      updateUser(profile);
+      console.log("Updated authStore with new profile");
+
       setUpdateStatus('success');
-      setIsEditMode(false); // Switch back to display mode on success
+      setAvatarPreview(null);
+      setIsEditMode(false);
     } catch (err) {
       setUpdateStatus('error');
       console.error(err);
@@ -86,6 +133,7 @@ const UserPage: React.FC = () => {
         avatar: userProfile.avatar || '',
       });
     }
+    setAvatarPreview(null);
     setIsEditMode(false);
   };
 
@@ -141,13 +189,38 @@ const UserPage: React.FC = () => {
   const renderEditMode = () => (
     <form onSubmit={handleUpdate} className="space-y-4">
       <div className="grid gap-2">
-        <label htmlFor="avatar">头像 URL</label>
-        <Input
-          id="avatar"
-          value={formData.avatar || ''}
-          onChange={handleInputChange}
-          placeholder="请输入头像图片链接"
-        />
+        <label>头像</label>
+        <div className="flex items-center gap-4">
+          <Avatar className="h-20 w-20">
+            <AvatarImage
+              src={avatarPreview || userProfile?.avatar || undefined}
+              alt="头像预览"
+            />
+            <AvatarFallback>
+              {(userProfile?.nickname || userProfile?.username || 'U').charAt(0).toUpperCase()}
+            </AvatarFallback>
+          </Avatar>
+          <div className="flex-1">
+            <input
+              ref={fileInputRef}
+              type="file"
+              accept="image/*"
+              onChange={handleAvatarUpload}
+              className="hidden"
+            />
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => fileInputRef.current?.click()}
+            >
+              <Upload className="h-4 w-4 mr-2" />
+              上传头像
+            </Button>
+            <p className="text-xs text-muted-foreground mt-1">
+              支持JPG、PNG格式
+            </p>
+          </div>
+        </div>
       </div>
       <div className="grid gap-2">
         <label htmlFor="nickname">昵称</label>
