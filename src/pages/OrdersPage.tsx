@@ -1,15 +1,19 @@
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
-import { getOrders, payOrder } from "@/services/order"
+import { getOrders, payOrder, updateOrderAddress } from "@/services/order"
 import { getProductById, getProductMainImage } from "@/services/product"
+import { getAddressList } from "@/services/address"
 import type { Order } from "@/types/order"
 import type { Product } from "@/types/product"
+import type { Address } from "@/types/address"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Toast } from "@/components/ui/toast"
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from "@/components/ui/alert-dialog"
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowLeft, Package, CreditCard, Truck, CheckCircle2 } from "lucide-react"
+import { ArrowLeft, Package, CreditCard, Truck, CheckCircle2, MapPin } from "lucide-react"
+import { Badge } from "@/components/ui/badge"
 
 interface OrderWithProduct extends Order {
   product?: Product
@@ -25,6 +29,10 @@ function OrdersPage() {
   const [showPayDialog, setShowPayDialog] = useState(false)
   const [paying, setPaying] = useState(false)
   const [filterTab, setFilterTab] = useState<"all" | "unpaid" | "paid">("all")
+  const [showAddressDialog, setShowAddressDialog] = useState(false)
+  const [addresses, setAddresses] = useState<Address[]>([])
+  const [selectedAddress, setSelectedAddress] = useState<Address | null>(null)
+  const [updatingAddress, setUpdatingAddress] = useState(false)
 
   useEffect(() => {
     loadOrders()
@@ -34,6 +42,9 @@ function OrdersPage() {
     try {
       setLoading(true)
       const ordersData = await getOrders()
+      console.log('[DEBUG] 获取到的订单数据:', ordersData)
+      console.log('[DEBUG] 第一个订单:', ordersData[0])
+      console.log('[DEBUG] 第一个订单的address字段:', ordersData[0]?.address)
 
       const ordersWithProducts = await Promise.all(
         ordersData.map(async (order) => {
@@ -48,6 +59,7 @@ function OrdersPage() {
         })
       )
 
+      console.log('[DEBUG] 包含商品信息的订单:', ordersWithProducts)
       setOrders(ordersWithProducts)
     } catch (error) {
       console.error('加载订单失败:', error)
@@ -74,6 +86,51 @@ function OrdersPage() {
       setShowToast(true)
     } finally {
       setPaying(false)
+    }
+  }
+
+  const handleSelectAddress = async (order: OrderWithProduct) => {
+    try {
+      const addressList = await getAddressList()
+      setAddresses(addressList)
+      setSelectedOrder(order)
+      setSelectedAddress(null)
+      setShowAddressDialog(true)
+    } catch (error) {
+      console.error('加载地址失败:', error)
+      setToastMessage("加载地址失败")
+      setShowToast(true)
+    }
+  }
+
+  const handleUpdateOrderAddress = async () => {
+    if (!selectedOrder || !selectedAddress) return
+
+    try {
+      setUpdatingAddress(true)
+      console.log('[DEBUG] 准备更新订单地址')
+      console.log('[DEBUG] 订单ID:', selectedOrder.orderId)
+      console.log('[DEBUG] 地址ID:', selectedAddress.id)
+      console.log('[DEBUG] 发送的payload:', { addressId: String(selectedAddress.id) })
+
+      await updateOrderAddress(selectedOrder.orderId, {
+        addressId: String(selectedAddress.id)
+      })
+
+      console.log('[DEBUG] 地址更新API调用成功')
+      setToastMessage("地址已设置")
+      setShowToast(true)
+      setShowAddressDialog(false)
+
+      console.log('[DEBUG] 准备重新加载订单列表')
+      await loadOrders()
+      console.log('[DEBUG] 订单列表重新加载完成')
+    } catch (error) {
+      console.error('[DEBUG] 设置地址失败:', error)
+      setToastMessage("设置地址失败，请重试")
+      setShowToast(true)
+    } finally {
+      setUpdatingAddress(false)
     }
   }
 
@@ -143,6 +200,8 @@ function OrdersPage() {
                   const status = getOrderStatus(order)
                   const StatusIcon = status.icon
 
+                  console.log('[DEBUG] 渲染订单:', order.orderId, '地址信息:', order.address)
+
                   return (
                     <Card key={order.orderId} className="hover:shadow-md transition-shadow">
                       <CardHeader className="pb-3">
@@ -182,11 +241,45 @@ function OrdersPage() {
                               <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
                                 {order.product.description}
                               </p>
+
+                              {order.address && (
+                                <div className="mt-2 p-2 bg-slate-50 rounded text-xs border">
+                                  <div className="flex items-start gap-1">
+                                    <MapPin className="h-3 w-3 mt-0.5 flex-shrink-0 text-muted-foreground" />
+                                    <div className="flex-1">
+                                      <div className="font-medium">
+                                        {order.address.receiverName} {order.address.receiverPhone}
+                                      </div>
+                                      <div className="text-muted-foreground mt-0.5">
+                                        {order.address.province} {order.address.city} {order.address.district} {order.address.detailAddress}
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              )}
+
                               <div className="flex items-center justify-between mt-3">
                                 <span className="text-lg font-bold text-red-600">
                                   ¥{(order.product.price || 0).toFixed(2)}
                                 </span>
-                                {!order.isPaid && (
+                                {(() => {
+                                  console.log('[DEBUG] 订单按钮判断 - orderId:', order.orderId)
+                                  console.log('[DEBUG] isPaid:', order.isPaid, 'address:', order.address)
+                                  console.log('[DEBUG] 条件1 (!order.isPaid && !order.address):', !order.isPaid && !order.address)
+                                  console.log('[DEBUG] 条件2 (!order.isPaid && order.address):', !order.isPaid && order.address)
+                                  return null
+                                })()}
+                                {!order.isPaid && !order.address && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => handleSelectAddress(order)}
+                                  >
+                                    <MapPin className="h-4 w-4 mr-1" />
+                                    选择地址
+                                  </Button>
+                                )}
+                                {!order.isPaid && order.address && (
                                   <Button
                                     size="sm"
                                     onClick={() => {
@@ -264,6 +357,79 @@ function OrdersPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      <Dialog open={showAddressDialog} onOpenChange={setShowAddressDialog}>
+        <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>选择收货地址</DialogTitle>
+            <DialogDescription>
+              请选择本订单的收货地址
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-3 py-4">
+            {addresses.length === 0 ? (
+              <div className="text-center py-8 text-muted-foreground">
+                <p>暂无收货地址</p>
+                <Button asChild className="mt-4" variant="outline">
+                  <Link to="/address">去添加地址</Link>
+                </Button>
+              </div>
+            ) : (
+              addresses.map((address) => (
+                <Card
+                  key={address.id}
+                  className={`cursor-pointer transition-all ${
+                    selectedAddress?.id === address.id
+                      ? 'border-primary border-2 bg-primary/5'
+                      : 'hover:border-muted-foreground'
+                  }`}
+                  onClick={() => setSelectedAddress(address)}
+                >
+                  <CardContent className="p-4">
+                    <div className="flex items-start justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-2">
+                          <Badge variant="outline">{address.tag}</Badge>
+                          {address.isDefault && <Badge>默认</Badge>}
+                        </div>
+                        <div className="space-y-1 text-sm">
+                          <div className="font-medium">
+                            {address.receiverName} {address.receiverPhone}
+                          </div>
+                          <div className="text-muted-foreground">
+                            {address.province} {address.city} {address.district}
+                          </div>
+                          <div className="text-muted-foreground">
+                            {address.detailAddress}
+                          </div>
+                        </div>
+                      </div>
+                      {selectedAddress?.id === address.id && (
+                        <CheckCircle2 className="h-5 w-5 text-primary flex-shrink-0" />
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))
+            )}
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setShowAddressDialog(false)}
+              disabled={updatingAddress}
+            >
+              取消
+            </Button>
+            <Button
+              onClick={handleUpdateOrderAddress}
+              disabled={!selectedAddress || updatingAddress}
+            >
+              {updatingAddress ? '设置中...' : '确认选择'}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Toast
         message={toastMessage}

@@ -59,6 +59,10 @@ function HomePage() {
         setCategories(categoriesData);
 
         console.log('商品数据示例:', productsData.slice(0, 2));
+        console.log('第一个商品的价格信息:', {
+          price: productsData[0]?.price,
+          originalPrice: productsData[0]?.originalPrice,
+        });
         console.log('分类数据:', categoriesData);
         console.log('商品分类字段示例:', productsData.slice(0, 5).map(p => ({ id: p.productId, category: p.category, categoryType: typeof p.category })));
 
@@ -138,7 +142,7 @@ function HomePage() {
   const displayProducts = showRecommended
     ? [...filteredProducts]
         .sort((a, b) => (productSales.get(b.productId) || 0) - (productSales.get(a.productId) || 0))
-        .slice(0, 50)
+        .slice(0, 30)
     : filteredProducts;
 
   return (
@@ -317,8 +321,15 @@ function HomePage() {
                       {product.description}
                     </CardDescription>
                     <div className="mt-auto">
-                      <div className="text-lg font-bold text-red-600">
-                        ¥{(product.price || 0).toFixed(2)}
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-lg font-bold text-red-600">
+                          ¥{(product.price || 0).toFixed(2)}
+                        </span>
+                        {product.originalPrice && product.originalPrice > product.price && (
+                          <span className="text-xs text-muted-foreground line-through">
+                            ¥{product.originalPrice.toFixed(2)}
+                          </span>
+                        )}
                       </div>
                       {showRecommended && (
                         <div className="text-xs text-muted-foreground mt-1">

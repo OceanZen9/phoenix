@@ -1,3 +1,5 @@
+import type { Address } from './address';
+
 export interface Order {
   orderId: string
   createdAt: string
@@ -6,6 +8,7 @@ export interface Order {
   userId: string
   isPaid: boolean
   isDelivered: boolean
+  address?: Address
 }
 
 export interface OrdersResponse {
@@ -18,4 +21,8 @@ export interface OrderResponse {
 
 export interface PayOrderPayload {
   productId: string
+}
+
+export interface UpdateOrderAddressPayload {
+  addressId: string
 }

@@ -228,7 +228,19 @@ function ProductDetailPage() {
         <div className="space-y-4">
           <div>
             <h1 className="text-3xl font-bold mb-2">{product.name}</h1>
-            <p className="text-2xl font-bold text-red-600">¥{product.price.toFixed(2)}</p>
+            <div className="flex items-baseline gap-3 mb-2">
+              <span className="text-3xl font-bold text-red-600">¥{product.price.toFixed(2)}</span>
+              {product.originalPrice && product.originalPrice > product.price && (
+                <>
+                  <span className="text-lg text-muted-foreground line-through">
+                    ¥{product.originalPrice.toFixed(2)}
+                  </span>
+                  <span className="text-sm bg-red-100 text-red-600 px-2 py-1 rounded">
+                    省¥{(product.originalPrice - product.price).toFixed(2)}
+                  </span>
+                </>
+              )}
+            </div>
           </div>
 
           <div className="space-y-2">
@@ -236,7 +248,13 @@ function ProductDetailPage() {
               <span>库存：{product.stock}</span>
             </div>
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span>已售：{product.soldQuantity || 0}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
               <span>分类：{product.category}</span>
+            </div>
+            <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              <span>上架时间：{new Date(product.createdAt).toLocaleString('zh-CN')}</span>
             </div>
           </div>
 

@@ -102,8 +102,17 @@ function FavoritesPage() {
                     <CardDescription className="text-xs line-clamp-2 mb-2 min-h-[2rem]">
                       {item.product.description}
                     </CardDescription>
-                    <div className="text-lg font-bold text-red-600 mt-auto">
-                      ¥{(item.product.price || 0).toFixed(2)}
+                    <div className="mt-auto">
+                      <div className="flex items-baseline gap-2">
+                        <span className="text-lg font-bold text-red-600">
+                          ¥{(item.product.price || 0).toFixed(2)}
+                        </span>
+                        {item.product.originalPrice && item.product.originalPrice > item.product.price && (
+                          <span className="text-xs text-muted-foreground line-through">
+                            ¥{item.product.originalPrice.toFixed(2)}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </CardContent>
                 </Link>
